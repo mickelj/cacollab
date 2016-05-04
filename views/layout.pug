@@ -1,0 +1,17 @@
+doctype html
+html
+    head
+        title= title
+        include bootstrap.pug
+        link(rel='stylesheet', href='https://code.jquery.com/ui/1.9.2/themes/base/jquery-ui.css')
+        link(rel='stylesheet', href='/stylesheets/style.css')
+    body
+        header.col-xs-12
+            include head.pug
+        div.workspace.col-xs-12.col-md-7.col-md-offset-1
+            block workspace
+        div.control-panel.col-md-3.col-md-offset-1
+            p Control Panel Goes Here
+        footer.col-xs-12
+            include foot.pug
+        include scripts.pug

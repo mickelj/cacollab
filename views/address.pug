@@ -1,0 +1,15 @@
+extends layout
+
+block workspace
+    div#textHolder
+        each val, index in tokens
+            if val == '\n'
+                br(id=index)
+            else
+                span(id="t" + index)= val
+    div#newAnnotationTemplate
+        form(class='newAnnotationForm', enctype="application/x-www-form-urlencoded", accept-charset="UTF-8")
+            input(type="hidden", name="textId", value="1")
+            input(type="hidden", name="sectionNum", value="1")
+            input(type="hidden", name="text")
+            input(type="hidden", name="colour")
