@@ -24,7 +24,7 @@ function prepareEverything(userId, textId, sectionNum, perm, firstAnn, appRoot, 
 	this.rootUrl = appRoot;
 	this.highlightMethod = highlightMethod;
 	this.groups = groups;
-	
+
 	if (permissions.makeComments) {
 		defaultTab = "comments";
 	} else if (permissions.editTags) {
@@ -34,12 +34,12 @@ function prepareEverything(userId, textId, sectionNum, perm, firstAnn, appRoot, 
 	} else {
 		defaultTab = "permalink";
 	}
-	
+
 	setupGroups();
-	
+
 	prepareInterface();
 	prepareTextInteraction();
-	
+
 	previousUpdate = prevUpdate;
 	lastUpdate = 0;
 	updateTimeout = null;
@@ -162,7 +162,7 @@ function handleError(xhr, textStatus, error) {
 
 function handleUpdateError(xhr, textStatus, error) {
 	updating = false;
-	alert("Update error: " + error);
+	//alert("Update error: " + error);
 }
 
 function handleReportedError(error) {
@@ -188,12 +188,12 @@ function performUpdate() {
 	if (!updating) {
 		updating = true;
 		setLastUpdated("Updating");
-		
+
 		if (updateTimeout != null) {
 			clearTimeout(updateTimeout);
 			updateTimeout = null;
 		}
-		
+
 		$.ajax({
 			url: "ajax/update",
 			type: "post",
@@ -205,155 +205,155 @@ function performUpdate() {
 	}
 }
 
-function handleUpdate(data) {	
+function handleUpdate(data) {
 	if (data.error) {
 		updating = false;
 		handleReportedError(data.error);
 		return;
 	}
-	
+
 	lastUpdate = data.time;
 	newChanges = 0;
-	
+
 	var somethingChanged = false;
-	
+
 	var affectedAnn = {};
-	
+
 	if (data.annotations) {
 		if (data.annotations.added && data.annotations.added.length != 0) {
 			var ann;
-			
+
 			for (var i = 0; i < data.annotations.added.length; i++) {
 				ann = data.annotations.added[i];
-				
+
 				annotations[ann.id] = ann;
-				
+
 				//addToColourMap(ann.colour, ann.id);
 				addToTokenRangeMap(ann.location, ann.id);
-				
+
 				ann.tags = [];
 				ann.comments = [];
 				ann.hidden = true;
-				
+
 				contributors[ann.whoId] = ann.who;
-				
+
 				if (ann.report) {
 					addToHistory("annotations", ann.id, ann.when, ann.who, "made a new annotation");
 				}
-				
+
 				affectedAnn[ann.id] = ann;
-				
+
 				if (ann.whoId == userId) {
 					mustBeVisible[ann.id] = 1;
 				}
 			}
-			
+
 			somethingChanged = true;
 		}
-		
+
 		if (data.annotations.tagsModified && data.annotations.tagsModified.length != 0) {
 			var ann;
 			var info;
-			
+
 			for (var i = 0; i < data.annotations.tagsModified.length; i++) {
 				info = data.annotations.tagsModified[i];
 				ann = annotations[info.annId];
 				ann.tags = info.tags;
-				
+
 				updateTags(ann.id, ann.tags);
-				
+
 				//addToTagMap(ann.tags, ann.id);
-				
+
 				if (info.report) {
 					addToHistory("tags", info.annId, info.when, info.who, "added a tag");
 				}
-				
+
 				affectedAnn[ann.id] = ann;
 			}
-			
+
 			somethingChanged = true;
 		}
-		
+
 		if (data.annotations.colourModified && data.annotations.colourModified.length != 0) {
 			var ann;
-			
+
 			for (var i = 0; i < data.annotations.colourModified.length; i++) {
 				ann = annotations[data.annotations.colourModified[i].annId];
-				
+
 				//removeFromColourMap(ann.colour, ann.id);
-				
+
 				var oldColour = ann.colour;
 				ann.colour = data.annotations.colourModified[i].colour;
-				
+
 				removeTokenRangeHighlight(ann.location, oldColour);
 				ann.hidden = true;
 				changeColour(ann.id, ann.colour);
-				
+
 				//addToColourMap(ann.colour, ann.id);
-				
+
 				affectedAnn[ann.id] = ann;
 			}
-			
+
 			somethingChanged = true;
 		}
-		
+
 		if (data.annotations.removed && data.annotations.removed.length != 0) {
 			var annId;
 			var ann;
-			
+
 			for (var i = 0; i < data.annotations.removed.length; i++) {
 				annId = data.annotations.removed[i];
 				ann = annotations[annId];
-								
+
 				delete annotations[annId];
-				
+
 				removeFromTokenRangeMap(ann.location, ann.id);
 				removeTokenRangeHighlight(ann.location, ann.colour);
 				//removeFromColourMap(ann.colour, ann.id);
 				//removeFromTagMap(ann.tags, ann.id);
-				
+
 				closeAnnotation(annId);
 			}
-			
+
 			somethingChanged = true;
 		}
 	}
-	
+
 	if (data.comments) {
 		if (data.comments.added && data.comments.added.length != 0) {
 			var com;
 			var ann;
-			
+
 			for (var i= 0; i < data.comments.added.length; i++) {
 				com = data.comments.added[i];
 				ann = annotations[com.annId];
 				ann.comments.push(com);
-				
+
 				addComment(ann.id, com);
-				
+
 				contributors[com.whoId] = com.who;
-				
+
 				if (com.report) {
 					addToHistory("comments", com.annId, com.when, com.who, "made a new comment");
 				}
-				
+
 				affectedAnn[ann.id] = ann;
 			}
-			
+
 			somethingChanged = true;
 		}
-		
+
 		if (data.comments.removed && data.comments.removed.length != 0) {
 			var comId;
 			var annId;
 			var ann;
-			
+
 			for (var i = 0; i < data.comments.removed.length; i++) {
 				annId = data.comments.removed[i].ann;
 				comId = data.comments.removed[i].com;
-								
+
 				ann = annotations[annId];
-				
+
 				if (ann) {
 					for (var j = 0; j < ann.comments.length; j++) {
 						if (ann.comments[j].id == comId) {
@@ -361,20 +361,20 @@ function handleUpdate(data) {
 							break;
 						}
 					}
-					
+
 					removeComment(ann.id, comId);
-					
+
 					affectedAnn[ann.id] = ann;
 				}
 			}
-			
+
 			somethingChanged = true;
 		}
 	}
-	
+
 	for (var a in affectedAnn) {
 		var ann = affectedAnn[a];
-		
+
 		if (testAnnotation(lastSearch, ann)) {
 			if (ann.hidden) {
 				addTokenRangeHighlight(ann.location, ann.colour);
@@ -385,7 +385,7 @@ function handleUpdate(data) {
 			ann.hidden = true;
 		}
 	}
-	
+
 	for (var a in mustBeVisible) {
 		var ann = annotations[a];
 		if (ann && ann.hidden) {
@@ -393,23 +393,23 @@ function handleUpdate(data) {
 			ann.hidden = false;
 		}
 	}
-	
+
 	if (data.tags) {
 		textTags = data.tags;
 		updateTopTags();
 		updateTagCloud();
 		updateAvailableTags();
 	}
-	
+
 	if (data.colourLabels) {
 		colourLabels = data.colourLabels;
 		setColourLabels();
 	}
-	
+
 	setLastUpdated();
 	setContributorLists();
 	setHistory();
-	
+
 	if (somethingChanged) {
 		updateDelay = UPDATE_DELAY_MIN;
 	} else {
@@ -418,11 +418,11 @@ function handleUpdate(data) {
 		}
 	}
 	updateTimeout = setTimeout("performUpdate()", updateDelay);
-	
+
 	updating = false;
-	
+
 	updateInterface();
-	
+
 	previousUpdate = lastUpdate;
 }
 
@@ -492,11 +492,11 @@ function addToHistory(type, annId, when, who, message) {
 	if (when > previousUpdate) {
 		newChanges++;
 	}
-	
+
 	var newHistory = [];
 	var ins = -1;
 	var mod = 0;
-	
+
 	for (var i = 0; i < textHistory.length; i++) {
 		if (ins == -1 && when > textHistory[i].when) {
 			ins = i;
@@ -504,7 +504,7 @@ function addToHistory(type, annId, when, who, message) {
 		}
 		newHistory[i + mod] = textHistory[i];
 	}
-	
+
 	if (ins != -1) {
 		newHistory[ins] = {
 			when: when,
@@ -522,11 +522,11 @@ function addToHistory(type, annId, when, who, message) {
 			type: type
 		});
 	}
-	
+
 	if (newHistory.length > MAX_HISTORY_SIZE) {
 		newHistory.pop();
 	}
-	
+
 	textHistory = newHistory;
 }
 
@@ -544,9 +544,9 @@ function clearSearch() {
 function testAnnotation(opt, ann) {
 	var annList = {};
 	annList[ann.id] = ann;
-		
+
 	var matched = doSearch(opt, annList);
-		
+
 	for (var m in matched) {
 		return true;
 	}
@@ -556,44 +556,44 @@ function testAnnotation(opt, ann) {
 var MODIFY_QUERY_REGEX = new RegExp('[^\\w\\d]+', 'gi');
 
 function doSearch(opt, annList) {
-	//if (opt.where == "section") {	
+	//if (opt.where == "section") {
 		var matched = annList;
-				
+
 		if (notEmpty(opt.colour)) {
 			matched = searchColours(opt.colour, matched);
 		}
-				
+
 		if (notEmpty(opt.tags)) {
 			var tagList = opt.tags.split(/\s+/);
 			matched = searchTags(tagList, matched);
 		}
-				
+
 		if (notEmpty(opt.by)) {
 			matched = searchUsers(opt.by, matched);
 		}
-		
+
 		if (notEmpty(opt.group)) {
 			matched = searchGroups(opt.group, matched);
 		}
-				
-		if (notEmpty(opt.query)) {			
+
+		if (notEmpty(opt.query)) {
 			var query = opt.query;
 			var regex;
-			
+
 			if (query.isASCII()) {
 				regex = new RegExp("\\b" + query.replace(MODIFY_QUERY_REGEX, "[^\\w\\d]+") + "\\b", "im");
 			} else {
 				regex = new RegExp(query, "m");
 			}
-		
+
 			if (opt.what == "highlights") {
 				matched = searchHighlights(regex, matched);
 			} else {
 				matched = searchComments(regex, matched);
 			}
 		}
-						
-		if (notEmpty(opt.from) || notEmpty(opt.to)) {			
+
+		if (notEmpty(opt.from) || notEmpty(opt.to)) {
 			var from = 0;
 			if (notEmpty(opt.from)) {
 				from = dateStringToTimestamp(opt.from);
@@ -605,7 +605,7 @@ function doSearch(opt, annList) {
 			matched = searchDates(from, to, matched);
 		}
 	//}
-	
+
 	return matched;
 }
 
@@ -704,7 +704,7 @@ function searchDates(from, to, annList) {
 					break;
 				}
 			}
-		} 
+		}
 	}
 	return matched;
 }
@@ -725,7 +725,7 @@ function searchUsers(userId, annList) {
 					break;
 				}
 			}
-		} 
+		}
 	}
 	return matched;
 }
@@ -737,24 +737,24 @@ function searchGroups(groupId, annList) {
 		var com;
 		var users = groups[groupId].users;
 		var match;
-				
+
 		for (var id in annList) {
 			ann = annList[id];
-						
+
 			match = false;
-			
+
 			for (var u = 0; u < users.length; u++) {
-				if (ann.whoId == users[u]) {					
+				if (ann.whoId == users[u]) {
 					matched[ann.id] = ann;
 					match = true;
 					break;
 				}
 			}
-			if (!match) {				
+			if (!match) {
 				for (var c = 0; c < ann.comments.length; c++) {
 					com = ann.comments[c];
-					for (var u = 0; u < users.length; u++) {						
-						if (com.whoId == users[u]) {							
+					for (var u = 0; u < users.length; u++) {
+						if (com.whoId == users[u]) {
 							matched[ann.id] = ann;
 							match = true;
 							break;
@@ -764,7 +764,7 @@ function searchGroups(groupId, annList) {
 						break;
 					}
 				}
-			} 
+			}
 		}
 	}
 	return matched;

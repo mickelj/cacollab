@@ -651,7 +651,7 @@ prepareEverything(
         1,
         1,
         1,
-        permissions,
+        {'makeHighlights' : true},
         1,
         "/",
         "d",

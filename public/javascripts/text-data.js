@@ -15,8 +15,6 @@
  * limitations under the License.
  */
 
-var permissions = {'makeHighlights' : true};
-
 var textId = 0;
 var sectionNumber = 0;
 var permissions;

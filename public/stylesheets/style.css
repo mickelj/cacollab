@@ -1,8 +1,12 @@
 header, footer {
-    background-color: #000;
-    color: #fff;
+    background-color: #bbb;
+    color: #000;
     height: 100px;
     padding: 25px;
+}
+
+#textHolder {
+    line-height: 1.75em;
 }
 
 .workspace {
@@ -10,11 +14,43 @@ header, footer {
     margin-bottom: 25px;
 }
 
-.control-panel {
+.workspace span:hover {
+    text-decoration: underline;
+}
+
+#control-panel {
     background-color: #000;
     color: #fff;
     padding-top: 25px;
+    position: fixed;
+    right: 0;
+    top: 0;
 }
+
+#newAnnotationTemplate {
+    color: #000;
+    display: none;
+}
+
+.annotation-list {
+    position: fixed;
+    bottom: 5px;
+    height: 70%;
+    overflow-y: auto;
+    overflow-x: hidden;
+    background-color: #eee;
+    border-radius: 5px;
+    padding: 10px;
+}
+
+.annotation-list textarea {
+    resize: none;
+}
+
+.newAnnotationForm {
+    color: #000;
+}
+
 
 /**************/
 /* Highlights */
@@ -22,16 +58,6 @@ header, footer {
 .sel {
     background-color: #ddd;
 }
-
-.hl {
-        border-bottom: 1px solid #000;
-        cursor: pointer;
-}
-
-.hl2 {
-        border-bottom: 2px solid #000;
-}
-
 
 /**************/
 /* Timepicker */

@@ -20,7 +20,7 @@ function prepareInterface() {
 	if (fontCookie && parseInt(fontCookie) == 12) {
 		enlargeText();
 	}
-	
+
 	if (window.self !== window.top) {
 		var but = $("<button/>", {
 			text: "Expand",
@@ -37,7 +37,7 @@ function prepareInterface() {
 				window.top.location = $("#path").val() + "breakout";
 			});
 	}
-	
+
 	$(".uiButton").button();
 	$(".uiButtonSet").buttonset();
 	$(".uiTabs").tabs();
@@ -45,10 +45,10 @@ function prepareInterface() {
 		collapsible: true,
 		autoHeight: false
 	});
-	
+
 	$("#hideBanner").button()
 		.click(hideBanner);
-	
+
 	$("#logoutButton").abutton({
 		'icons': {
 			'primary': "ui-icon-locked"
@@ -64,36 +64,36 @@ function prepareInterface() {
 			'primary': "ui-icon-pencil"
 		}
 	});
-	
+
 	$("#toolbox").mousedown(toolboxMouseDown);
 	$("#toolboxPopout").mousedown(toolboxMouseDown);
-	
+
 	$("#toolboxPopoutCloseButton").button({
 		icons: {
 			primary: "ui-icon-carat-1-e"
 		},
 		text: false
 	}).click(closeToolboxPopout);
-	
+
 	$("#reduceTextButton").click(reduceText);
 	$("#enlargeTextButton").click(enlargeText);
-	
+
 	// toolbox buttons
-	
+
 	$("#textAdminButton").button({
 		icons: {
 			primary: "ui-icon-gear"
 		}
 	})
 	.click(textAdmin);
-	
+
 	$("#openSectionsButton").button({
 		icons: {
 			primary: "ui-icon-copy"
 		}
 	})
 	.click(showSections);
-	
+
 	$("#printTextButton").button({
 		icons: {
 			primary: "ui-icon-print"
@@ -101,7 +101,7 @@ function prepareInterface() {
 		text: false
 	})
 	.click(printText);
-	
+
 	$("#openHistoryButton").button({
 		icons: {
 			primary: "ui-icon-clock"
@@ -110,8 +110,8 @@ function prepareInterface() {
 	})
 	.click(showHistory);
 	$("#newCount").click(showHistory);
-	
-	
+
+
 	$("#openPreferencesButton").button({
 		icons: {
 			primary: "ui-icon-wrench"
@@ -119,7 +119,7 @@ function prepareInterface() {
 		text: false
 	})
 	.click(showPreferences);
-	
+
 	$("#openColoursButton").button({
 		icons: {
 			primary: "ui-icon-palette"
@@ -127,13 +127,13 @@ function prepareInterface() {
 		text: false
 	})
 	.click(showColours);
-	
+
 		$("#editColoursForm").submit(saveColourLabels);
-		
+
 		$("#editColoursForm input[type=text]").change(markDeleted);
-		
+
 		$("#resetColourLabels").click(setColourLabels);
-	
+
 	$("#openTagCloudButton").button({
 		icons: {
 			primary: "ui-icon-cloud"
@@ -141,7 +141,7 @@ function prepareInterface() {
 		text: false
 	})
 	.click(showTagCloud);
-	
+
 	$("#openSearchButton").button({
 		icons: {
 			primary: "ui-icon-search"
@@ -149,24 +149,24 @@ function prepareInterface() {
 		text: false
 	})
 	.click(showSearch);
-	
+
 		$("#searchForm").submit(search);
-	
+
 		$("#search input[name=from]").datetimepicker({
 			dateFormat: "dd/mm/yy",
 			addSliderAccess: true,
 			sliderAccessArgs: { touchonly: false }
 		});
-		
+
 		$("#search input[name=to]").datetimepicker({
 			dateFormat: "dd/mm/yy",
 			addSliderAccess: true,
 			sliderAccessArgs: { touchonly: false }
 		});
-		
+
 		setGroupLists();
 		setGroupDisplays();
-	
+
 	$("#refreshButton").button({
 		icons: {
 			primary: "ui-icon-refresh"
@@ -174,16 +174,16 @@ function prepareInterface() {
 		text: false
 	})
 	.click(updateNow);
-	
+
 	$("#openGroupsButton").button({
 		icons: {
 			primary: "ui-icon-shuffle"
 		}
 	})
 	.click(showGroups);
-	
+
 	// show / hide
-	
+
 	$("#showMineButton").button({
 		icons: {
 			primary: "ui-icon-person"
@@ -191,7 +191,7 @@ function prepareInterface() {
 		text: false
 	})
 	.click(showOnlyMyHighlights);
-	
+
 	$("#showAllButton").button({
 		icons: {
 			primary: "ui-icon-infinity"
@@ -199,7 +199,7 @@ function prepareInterface() {
 		text: false
 	})
 	.click(showAllHighlights);
-	
+
 	$("#hideAllButton").button({
 		icons: {
 			primary: "ui-icon-cancel"
@@ -207,9 +207,9 @@ function prepareInterface() {
 		text: false
 	})
 	.click(hideAllHighlights);
-	
+
 	// show colours
-	
+
 	$("#showYellowButton").button({
 		icons: {
 			primary: "ui-icon-blank"
@@ -217,7 +217,7 @@ function prepareInterface() {
 		text: false
 	})
 	.click(function() { limitByColour("yellow"); });
-	
+
 	$("#showBlueButton").button({
 		icons: {
 			primary: "ui-icon-blank"
@@ -225,7 +225,7 @@ function prepareInterface() {
 		text: false
 	})
 	.click(function() { limitByColour("blue"); });
-	
+
 	$("#showGreenButton").button({
 		icons: {
 			primary: "ui-icon-blank"
@@ -233,7 +233,7 @@ function prepareInterface() {
 		text: false
 	})
 	.click(function() { limitByColour("green"); });
-	
+
 	$("#showRedButton").button({
 		icons: {
 			primary: "ui-icon-blank"
@@ -241,7 +241,7 @@ function prepareInterface() {
 		text: false
 	})
 	.click(function() { limitByColour("red"); });
-	
+
 	$("#showCyanButton").button({
 		icons: {
 			primary: "ui-icon-blank"
@@ -249,7 +249,7 @@ function prepareInterface() {
 		text: false
 	})
 	.click(function() { limitByColour("cyan"); });
-	
+
 	$("#showPurpleButton").button({
 		icons: {
 			primary: "ui-icon-blank"
@@ -257,11 +257,11 @@ function prepareInterface() {
 		text: false
 	})
 	.click(function() { limitByColour("purple"); });
-	
+
 	hideToolboxContent();
-	
+
 	// touch move
-	
+
 	if (highlightMethod == "t") {
 		$("#page").click(touchMoveFinish);
 	}
@@ -391,10 +391,10 @@ function setHistory() {
 	$("#historyContent").empty();
 	var str = "";
 	var hist;
-	
+
 	for (var i = 0; i < textHistory.length; i++) {
 		hist = textHistory[i];
-		
+
 		var tab = DEFAULT_TAB;
 		if (hist.type == "tags") {
 			tab = TAGS_TAB;
@@ -410,7 +410,7 @@ function setHistory() {
 		str += '</a><br>';
 	}
 	$("#historyContent").html(str);
-	
+
 	$("#newCount").text(newChanges);
 	if (newChanges == 0) {
 		$("#newCount").css("visibility", "hidden");
@@ -461,9 +461,9 @@ function showTagCloud() {
 function updateTopTags() {
 	var div = $("#topTags");
 	div.empty();
-	
+
 	textTags.sort(tagFreqComparator);
-	
+
 	var tag;
 	for (var t = 0; t < textTags.length; t++) {
 		tag = textTags[t];
@@ -479,9 +479,9 @@ function updateTopTags() {
 function updateTagCloud() {
 	var div = $("#tagCloud");
 	div.empty();
-	
+
 	textTags.sort(tagComparator);
-	
+
 	var tag;
 	var maxFreq = 1;
 	for (var t = 0; t < textTags.length; t++) {
@@ -490,13 +490,13 @@ function updateTagCloud() {
 			maxFreq = tag.freq;
 		}
 	}
-	
+
 	for (var t = 0; t < textTags.length; t++) {
 		tag = textTags[t];
 		$("<a/>", {
 			href: "javascript:limitByTag(\"" + tag.tag + "\")",
 			text: tag.tag,
-			style: "font-size:" + Math.floor(((tag.freq / maxFreq) * 22) + 8) + "pt", 
+			style: "font-size:" + Math.floor(((tag.freq / maxFreq) * 22) + 8) + "pt",
 			title: tag.freq
 		}).appendTo(div);
 		div.append(" ");
@@ -530,30 +530,30 @@ function setGroupLists() {
 	var val = select.val();
 	select.empty();
 	$("<option/>", { value: "", text: "any group" }).appendTo(select);
-	
+
 	var list = $("#groupList");
 	list.empty();
-	
+
 	var count = 0;
-	
+
 	for (var g in groups) {
 		$("<option/>", { value: g, text: groups[g].name }).appendTo(select);
-		
-		$("<a/>", { 
+
+		$("<a/>", {
 			text: groups[g].name,
 			href: "javascript:chooseGroup(" + g + ")",
 			id: "group" + g
 		}).appendTo(list);
-		$("<br/>").appendTo(list);	
-		
+		$("<br/>").appendTo(list);
+
 		count++;
 	}
-	
+
 	if (count == 0) {
 		$("#groups").remove();
 		$("#groupOptions").remove();
 	}
-	
+
 	select.val(val);
 }
 
@@ -584,14 +584,14 @@ function chooseGroup(group) {
 
 function search(event) {
 	var where = $(this).find("input[name='where']:checked").val();
-	
+
 	if (where == "section") {
 		event.preventDefault();
-	
+
 		$(this).find("#searchButton").button("disable");
-		
+
 		hideAllHighlights();
-	
+
 		var matched = searchAnnotations({
 			query: this.query.value,
 			what: this.what.value,
@@ -602,7 +602,7 @@ function search(event) {
 			from: this.from.value,
 			to: this.to.value
 		});
-		
+
 		if (notEmpty(this.group.value)) {
 			setGroup(this.group.value);
 			setGroupDisplays();
@@ -610,9 +610,9 @@ function search(event) {
 			forgetGroup();
 			setGroupDisplays();
 		}
-		
+
 		showHighlights(matched);
-		
+
 		$(this).find("#searchButton").button("enable");
 	}
 	// else form will submit to /textsearch
@@ -632,10 +632,10 @@ function updateInterface() {
 		if (ann) {
 			openAndScrollToAnnotation(ann);
 		}
-		
+
 		firstAnnotation = 0;
 	}
-	
+
 	var awaitingNew = [];
 	var newAnn;
 	while (newAnnotationIds.length > 0) {
@@ -648,7 +648,7 @@ function updateInterface() {
 		}
 	}
 	newAnnotationIds = awaitingNew;
-	
+
 	$(".annotationDialog .saveCommentButton").button("option", "disabled", false);
 	$(".annotationDialog .saveTagsButton").button("option", "disabled", false);
 	$("#saveColourLabelsButton").button("option", "disbaled", false);
@@ -687,21 +687,21 @@ function showAnnotationTip(ann, x, y) {
 	tipDiv.css("top", (y + 10) + "px");
 	tipDiv.addClass("activeTip");
 	tipDiv.addClass(ann.colour + "Tip");
-	
+
 	tipDiv.find(".tipCommentText").text(ann.comments.length);
-	
+
 	tipDiv.find(".tipColourText").text(ann.colour.capitalise());
 	if (colourLabels[ann.colour]) {
 		tipDiv.find(".tipColourText").text(tipDiv.find(".tipColourText").text() + ": " + colourLabels[ann.colour]);
 	}
-	
+
 	if (ann.tags.length > 0) {
 		tipDiv.find(".tipTagText").text(ann.tags.join(" "));
 	} else {
 		tipDiv.find(".tipTagText").remove();
 		tipDiv.find(".tipTagIcon").remove();
 	}
-	
+
 	$("body").append(tipDiv);
 }
 
@@ -713,7 +713,7 @@ function hideAnnotationTips() {
 function openAnnotation(ann, x, y, tab) {
 	if (!isOpen(ann.id)) {
 		var annDiv = $.fromTemplate("annotationTemplate");
-		
+
 		annDiv.dialog({
 			title: ann.text.brief(),
 			position: [0, 0],
@@ -735,9 +735,9 @@ function openAnnotation(ann, x, y, tab) {
 			.attr("id", "ann" + ann.id)
 			.mousedown(dialogMouseDown)
 			.resizable("option", "alsoResize", $(annDiv).find(".commentList"));
-		
+
 		annDiv.closest(".ui-dialog").find(".ui-dialog-title").attr("title", ann.text);
-		
+
 		if (!tab) {
 			tab = DEFAULT_TAB;
 		}
@@ -748,11 +748,11 @@ function openAnnotation(ann, x, y, tab) {
 			collapsible: true,
 			selected: tab
 		});
-		
+
 		if (highlightMethod == "t") {
 			annDiv.closest(".ui-dialog").find(".ui-dialog-titlebar").click(touchMove);
 		}
-		
+
 		annDiv.find(".saveCommentButton").button({
 			icons: {
 				primary: "ui-icon-check"
@@ -760,7 +760,7 @@ function openAnnotation(ann, x, y, tab) {
 			text: false
 		});
 		annDiv.find(".newCommentForm").submit(saveComment);
-		
+
 		annDiv.find(".saveTagsButton").button({
 			icons: {
 				primary: "ui-icon-check"
@@ -774,7 +774,7 @@ function openAnnotation(ann, x, y, tab) {
 			select: autoCompleteTagSelect
 		});
 		annDiv.find(".newTagsForm").submit(saveTags);
-		
+
 		annDiv.find(".lookUpDropDown").dropdown({
 			autocomplete: {
 				select: lookUpSelect
@@ -787,9 +787,9 @@ function openAnnotation(ann, x, y, tab) {
 				label: "Look up on external website..."
 			}
 		});
-		
+
 		annDiv.find(".permalink textarea").click(selectText);
-		
+
 		annDiv.find(".deleteAnnotationButton").button({
 			icons: {
 				primary: "ui-icon-trash"
@@ -808,9 +808,9 @@ function openAnnotation(ann, x, y, tab) {
 				label: "Change Colour"
 			}
 		});
-		
+
 		populateAnnotation(annDiv, ann);
-		
+
 		if (highlightMethod != "d") {
 			annDiv.closest(".ui-dialog").find(".ui-dialog-titlebar-close").focus();
 		}
@@ -824,7 +824,7 @@ function populateAnnotation(annDiv, ann) {
 	populateTags(annDiv, ann.tags);
 }
 
-function populateComments(annDiv, comments) {	
+function populateComments(annDiv, comments) {
 	annDiv.find(".commentList").empty();
 	for (var i = 0; i < comments.length; i++) {
 		appendComment(annDiv, comments[i]);
@@ -838,7 +838,7 @@ function appendComment(annDiv, com) {
 	comDiv.fill("time", formatTime(com.when));
 	comDiv.fill("user", com.who);
 	comDiv.fill("message", linksToHrefs(com.message));
-	
+
 	comDiv.hover(showCommentInfo, hideCommentInfo);
 	comDiv.find(".deleteCommentButton").button({
 		icons: {
@@ -860,7 +860,7 @@ function populateTags(annDiv, tags) {
 function appendTag(annDiv, tag) {
 	var tagDiv = $.fromTemplate("tagTemplate");
 	tagDiv.fill("tag", tag);
-	
+
 	tagDiv.hover(showTagInfo, hideTagInfo);
 	tagDiv.find(".deleteTagButton").button({
 		icons: {
@@ -908,7 +908,7 @@ function saveComment(event) {
 	this.comment.value = "";
 	$(this).find(".saveCommentButton").button("option", "disabled", true);
 	doSaveComment(data);
-	
+
 	mustBeVisible[getAnnotationId(this)] = 1;
 }
 
@@ -917,7 +917,7 @@ function deleteComment(event) {
 	if (confirm("Are you sure you wish to delete this comment?")) {
 		var comId = getCommentId(this);
 		doDeleteComment(comId);
-		
+
 		mustBeVisible[getAnnotationId(this)] = 1;
 	}
 }
@@ -928,7 +928,7 @@ function saveTags(event) {
 	this.tags.value = "";
 	$(this).find(".saveTagsButton").button("option", "disabled", true);
 	doSaveTags(data);
-	
+
 	mustBeVisible[getAnnotationId(this)] = 1;
 }
 
@@ -938,7 +938,7 @@ function deleteTag(event) {
 		var annId = getAnnotationId(this);
 		var tag = getTagString(this);
 		doDeleteTag(annId, tag);
-		
+
 		mustBeVisible[annId] = 1;
 	}
 }
@@ -949,12 +949,12 @@ function lookUpSelect(event, ui) {
 
 function colourSelect(event, ui) {
 	event.preventDefault();
-	
+
 	var annId = getAnnotationId(this);
 	doChangeColour(annId, ui.item.value);
-	
+
 	mustBeVisible[annId] = 1;
-	
+
 	latestColour = ui.item.value;
 }
 
@@ -1015,57 +1015,42 @@ function goToAnn(id, tab) {
 
 
 
-
 // new annotations
 
 function openNewAnnotation(text, location, x, y) {
 	var id = ++newAnnotationCount;
 
 	var newAnnDiv = $.fromTemplate("newAnnotationTemplate");
-	newAnnDiv.dialog({
+
+	var $dialog = newAnnDiv.dialog({
 		title: text.brief(),
-		position: [0, 0],
 		minWidth: 250,
 		minHeight: 28,
-		width: 350,
-		draggable: highlightMethod != "t",
-		resizable: "se",
+		width: 450,
+		draggable: true,
+		resizable: false,
 		stack: false,
 		zIndex: ++highestZIndex,
-		close: closeNewAnnotation
+		close: closeNewAnnotation,
+		modal: true
 	});
-	newAnnDiv.closest(".ui-dialog")
-		.css("left", (x + 10) + "px")
-		.css("top", (y + 10) + "px")
-		.addClass("newAnnotationDialog")
-		.attr("id", "newAnn" + id)
-		.addClass(latestColour)
-		.mousedown(dialogMouseDown);
-	
+
+	newAnnDiv.find("#saveNewAnn").click(function () {
+		alert("Saved!");
+	});
+
+	newAnnDiv.find("#closeNewAnn").click(function () {
+		$dialog.dialog( "close" );
+	});
+
 	newAnnDiv.closest(".ui-dialog").find(".ui-dialog-title").attr("title", text);
-	
-	if (highlightMethod == "t") {
-		newAnnDiv.closest(".ui-dialog").find(".ui-dialog-titlebar").click(touchMove);
-	}
-	
+
 	newAnnDiv.find("input[name=text]").val(text);
-	
-	for (var i in location) {
-		newAnnDiv.find(".newAnnotationForm").prepend($("<input/>", {
-			type: "hidden",
-			name: i,
-			value: location[i]
-		}));
-	}
-	
-	newAnnDiv.find(".newAnnotationForm").submit(saveNewAnnotation);
-	
-	newAnnDiv.find(".saveAnnotationButton").button({
-		icons: {
-			primary: "ui-icon-check"
-		}
-	});
-	
+
+
+
+	//newAnnDiv.submit(saveNewAnnotation);
+
 	newAnnDiv.find("input[name=tags]").autocomplete({
 		minLength: 0,
 		source: autoCompleteTagResults,
@@ -1105,7 +1090,7 @@ function openNewAnnotation(text, location, x, y) {
 	} else {
 		newAnnDiv.find(".colourName").text(latestColour.capitalise());
 	}
-	
+
 	if (highlightMethod != "d") {
 		$(window).scrollLeft(x);
 		$(window).scrollTop(y - 30);
@@ -1121,7 +1106,7 @@ function newColourSelect(event, ui) {
 	$(this).closest(".ui-dialog")
 		.removeClass(colours.join(" "))
 		.addClass(ui.item.value);
-	
+
 	if (colourLabels[ui.item.value]) {
 		$(this).closest(".ui-dialog").find(".colourName")
 			.text(colourLabels[ui.item.value])
@@ -1131,7 +1116,7 @@ function newColourSelect(event, ui) {
 			.text(ui.item.value.capitalise())
 			.attr("title", null);
 	}
-	
+
 	latestColour = ui.item.value;
 }
 
@@ -1152,13 +1137,13 @@ function closeNewAnnotationById(id) {
 
 function saveNewAnnotation(event) {
 	event.preventDefault();
-	
+
 	var data = $(this).closest("form").serialize();
 	var offset = $(this).closest(".newAnnotationDialog").offset();
 	var newId = findInt($(this).closest(".newAnnotationDialog").prop("id"));
-	
+
 	doSaveNewAnnotation(data, newId, offset.left, offset.top);
-	
+
 	//$(this).closest(".ui-dialog-content").dialog("close");
 	$(this).find(".saveAnnotationButton").button("option", "disabled", true);
 }
@@ -1185,16 +1170,16 @@ function touchMove(event) {
 	if ($(event.target).closest(".ui-dialog-titlebar-close").length == 0) {
 		event.stopPropagation();
 		event.preventDefault();
-		
+
 		var div = $(event.target).closest(".ui-dialog");
-		
+
 		var offset = div.offset();
 		dragInfo.dx = event.pageX - offset.left;
 		dragInfo.dy = event.pageY - offset.top;
-		
+
 		dragInfo.div = div;
 		dragInfo.active = true;
-		
+
 		$("#page").css("cursor", "move");
 	}
 }

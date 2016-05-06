@@ -1,15 +1,26 @@
 extends layout
 
 block workspace
+    div#newAnnotationTemplate
+        p.small.col-xs-6
+            i Commenter
+        p.small.col-xs-6.text-right
+            i Datetime
+        form(class='newAnnotationForm', enctype="application/x-www-form-urlencoded", accept-charset="UTF-8")
+            textarea(style='width:100%; margin-bottom: 15px;')
+            button#closeNewAnn.btn.btn-sm.btn-default.col-xs-3
+                span.glyphicon.glyphicon-remove.text-danger
+                |  Cancel
+            button#saveNewAnn.btn.btn-sm.btn-primary.col-xs-3.col-xs-offset-6
+                span.glyphicon.glyphicon-ok
+                |  Save
+
     div#textHolder
         each val, index in tokens
             if val == '\n'
                 br(id=index)
             else
                 span(id="t" + index)= val
-    div#newAnnotationTemplate
-        form(class='newAnnotationForm', enctype="application/x-www-form-urlencoded", accept-charset="UTF-8")
-            input(type="hidden", name="textId", value="1")
-            input(type="hidden", name="sectionNum", value="1")
-            input(type="hidden", name="text")
-            input(type="hidden", name="colour")
+
+block control-panel
+    div.annotation-list
