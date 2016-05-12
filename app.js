@@ -4,10 +4,11 @@ var favicon = require('serve-favicon');
 var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
-
 var routes = require('./routes/index');
 var users = require('./routes/users');
-var addresses = require('./routes/addresses');
+var docs = require('./routes/docs');
+//var db = require('./utils/db');
+var db = require('./utils/dbmodel');
 
 var app = express();
 
@@ -25,7 +26,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/', routes);
 app.use('/users', users);
-app.use('/address', addresses);
+app.use('/document', docs);
 
 
 // catch 404 and forward to error handler
@@ -59,5 +60,12 @@ app.use(function(err, req, res, next) {
   });
 });
 
+// Connect to Mongo on start
+db.connect('mongodb://localhost:27017/cacollab', function(err) {
+  if (err) {
+    console.log('Unable to connect to Mongo.');
+    process.exit(1);
+  }
+});
 
 module.exports = app;

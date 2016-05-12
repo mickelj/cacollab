@@ -1,26 +1,38 @@
-var mc = require('mongodb').MongoClient;
-var assert = require('assert');
-var ObjectId = require('mongodb').ObjectID;
-var url = 'mongodb://localhost:27017/cacollab';
+var MongoClient = require('mongodb').MongoClient
 
-mc.connect(url, function(err, db) {
-  assert.equal(null, err);
-  console.log("Connected correctly to server.");
-  findDocs(db, function() {
-    db.close();
-  });
-});
+var state = {
+  db: null,
+}
 
-var 
+exports.connect = function(url, done) {
+  if (state.db) return done()
 
-var findDocs = function(db, callback) {
-   var cursor = db.collection('documents').find();
-   cursor.each(function(err, doc) {
-      assert.equal(err, null);
-      if (doc != null) {
-         console.dir([doc.president, doc.year]);
-      } else {
-         callback();
-      }
-   });
-};
+  MongoClient.connect(url, function(err, db) {
+    if (err) return done(err)
+    state.db = db
+    done()
+  })
+}
+
+exports.get = function() {
+  return state.db
+}
+
+exports.add = function(collection, document) {
+    if (state.db) {
+        state.db.collection(collection).insertOne(document, function(err, res) {
+            if (err) throw err;
+            console.log("Inserted " + document + " to collection " + collection);
+        });
+    }
+}
+
+exports.close = function(done) {
+  if (state.db) {
+    state.db.close(function(err, result) {
+      state.db = null
+      state.mode = null
+      done(err)
+    })
+  }
+}

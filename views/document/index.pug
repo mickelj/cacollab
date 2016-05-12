@@ -1,0 +1,22 @@
+extends ../layout.pug
+
+block workspace
+     h1.
+         #{title}
+     table.table.table-condensed.table-hover
+         tr
+             th &nbsp;
+             th Title
+             th President
+             th Actions
+         each doc, i in documents
+             tr
+                 td= i+1
+                 td= doc.title
+                 td= doc.president
+                 td
+                     a.btn.btn-danger(href="/document/" + doc._id + "/delete") Delete
+                     a.btn.btn-primary(href="/document/" + doc._id + "/edit") Annotate
+
+     p
+         a.btn.btn-success(href='/document/new') New

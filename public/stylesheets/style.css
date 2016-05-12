@@ -14,7 +14,11 @@ header, footer {
     margin-bottom: 25px;
 }
 
-.workspace span:hover {
+a.btn-default {
+    width: 100%;
+}
+
+.workspace span[id^=t]:hover {
     text-decoration: underline;
 }
 
@@ -51,6 +55,21 @@ header, footer {
     color: #000;
 }
 
+a#add_row:hover, a.delete-row:hover {
+    text-decoration:none;
+}
+
+.select2-container .select2-selection--single {
+    height: 34px;
+}
+
+.select2-container--default .select2-selection--single .select2-selection__rendered {
+    line-height: 32px;
+}
+
+.select2-container--default .select2-selection--single .select2-selection__arrow {
+    top: 4px;
+}
 
 /**************/
 /* Highlights */
