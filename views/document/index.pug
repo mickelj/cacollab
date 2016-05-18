@@ -7,16 +7,26 @@ block workspace
          tr
              th &nbsp;
              th Title
-             th President
+             th Contributors
              th Actions
+             th Export
+             th
          each doc, i in documents
              tr
                  td= i+1
                  td= doc.title
-                 td= doc.president
+                 td= doc.contributors
                  td
-                     a.btn.btn-danger(href="/document/" + doc._id + "/delete") Delete
-                     a.btn.btn-primary(href="/document/" + doc._id + "/edit") Annotate
+                     a.btn.btn-primary.btn-sm(href="/document/" + doc._id + "/code") Code &amp; Annotate
+                     | &nbsp;
+                     a.btn.btn-primary.btn-sm(href="/document/" + doc._id + "/edit") Edit Document Information
+                 td
+                     a.label.label-sm.label-success(href="/document/" + doc._id + "/json") JSON
+                     // | &nbsp;
+                     // a.label.label-sm.label-success(href="/document/" + doc._id + "/xml") XML
+                 td
+                     a(href="/document/" + doc._id + "/delete")
+                         span.glyphicon.glyphicon-remove.text-danger
 
      p
-         a.btn.btn-success(href='/document/new') New
+         a.btn.btn-success(href='/document/new') Create New Document

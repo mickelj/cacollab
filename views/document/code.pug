@@ -1,0 +1,30 @@
+extends ../layout.pug
+
+block workspace
+    div#newAnnotationTemplate
+        p
+            b
+                i#notetext
+        form#newAnnForm(class='newAnnotationForm', enctype="application/x-www-form-urlencoded", accept-charset="UTF-8")
+            input#document(type="hidden", name="document", value=docid)
+            input#tokenStart(type="hidden", name="tokenStart")
+            input#tokenEnd(type="hidden", name="tokenEnd")
+            textarea#note(name='note', style='width:100%; margin-bottom: 15px;')
+            button#closeNewAnn.btn.btn-sm.btn-default.col-xs-3
+                span.glyphicon.glyphicon-remove.text-danger
+                |  Cancel
+            button#saveNewAnn.btn.btn-sm.btn-primary.col-xs-3.col-xs-offset-6(type="submit")
+                span.glyphicon.glyphicon-ok
+                |  Save
+
+    h2= title
+
+    div#textHolder
+        each val, index in tokens
+            if val == '\n' || val == '\r' || val == '\r\n'
+                br(id=index)
+            else
+                span(id="t" + index)= val
+
+block control-panel
+    div.annotation-list

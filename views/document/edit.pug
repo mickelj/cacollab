@@ -1,28 +1,133 @@
 extends ../layout.pug
 
 block workspace
-    div#newAnnotationTemplate
-        p.small.col-xs-6
-            i Commenter
-        p.small.col-xs-6.text-right
-            i Datetime
-        form(class='newAnnotationForm', enctype="application/x-www-form-urlencoded", accept-charset="UTF-8")
-            textarea(style='width:100%; margin-bottom: 15px;')
-            button#closeNewAnn.btn.btn-sm.btn-default.col-xs-3
-                span.glyphicon.glyphicon-remove.text-danger
-                |  Cancel
-            button#saveNewAnn.btn.btn-sm.btn-primary.col-xs-3.col-xs-offset-6
-                span.glyphicon.glyphicon-ok
-                |  Save
-
-    h2= title
-
-    div#textHolder
-        each val, index in tokens
-            if val == '\n' || val == '\r' || val == '\r\n'
-                br(id=index)
-            else
-                span(id="t" + index)= val
-
-block control-panel
-    div.annotation-list
+    h1= title
+        small.text-danger &nbsp; (#[span.glyphicon.glyphicon-asterisk.text-danger] required)
+    form#formAddDoc.form-horizontal(method="post", action="/document/" + doc._id + "/edit")
+        div.form-group
+            label.col-sm-3.control-label(for="name") Title
+                span.glyphicon.glyphicon-asterisk.text-danger
+            div.col-sm-9
+                input#name.form-control(type="text", placeholder="Title of Document", name="name", value=doc.title)
+        div.form-group
+            label.col-sm-3.control-label(for="contrib") Contributors&nbsp;
+                span#contributors-help.glyphicon.glyphicon-info-sign.text-info(data-container="body", data-toggle="popover", data-placement="bottom", data-content="Authors, editors, key subjects", data-trigger="hover")
+                span.glyphicon.glyphicon-asterisk.text-danger
+            div.col-sm-9
+                textarea#contrib.form-control(placeholder="List contributors to document, one per line", name="contrib", rows="5")= doc.contributors
+        div.form-group
+            label.col-sm-3.control-label(for="docText") Text of Document
+                span.glyphicon.glyphicon-asterisk.text-danger
+            div.col-sm-6
+                textarea#docText.form-control(name="docText",rows=10, placeholder="Paste text of document here")= doc.tokens
+            div.col-sm-1.text-center OR
+            div.col-sm-2
+                a.btn.btn-default#uploadButton Upload File
+        div.form-group
+            label.col-sm-3.control-label(for="groups") Assign to User Group(s)&nbsp;
+                span#usergroup-help.glyphicon.glyphicon-info-sign.text-info(data-container="body", data-toggle="popover", data-placement="bottom", data-content="User groups are sets of users who will have common access to the document (i.e. a course of students, a set of researchers).", data-trigger="hover")
+            div.col-sm-6
+                select#usergroups.form-control(name="usergroups", style='width: 100%', multiple='multiple')
+                    each v, i in groups
+                        - var id = v._id.toString()
+                        - if (id in doc.groups || id == doc.groups)
+                            option(value=id, selected)= v.name
+                        - else
+                            option(value=id)= v.name
+            div.col-sm-1.text-center OR
+            div.col-sm-2
+                a.btn.btn-default Create User Group
+        div.form-group
+            label.col-sm-3.control-label(for="collections") Part of Collection(s)&nbsp;
+                span#collection-help.glyphicon.glyphicon-info-sign.text-info(data-container="body", data-toggle="popover", data-placement="bottom", data-content="Collections are sets of documents with similar characteristics or coding rules.", data-trigger="hover")
+            div.col-sm-6
+                select#collections.form-control(name="collections", style='width: 100%', multiple='multiple', value=vals)
+                    script.
+                        var vals = "#{doc.collections}".replace(',','","')
+                        vals = '["' + vals + '"]';
+                        alert(vals)
+                        $(document).ready(function() {
+                            $("select#collections").val(vals).trigger("change");
+                        })
+                    each v, i in collections
+                        - var id = v._id.toString()
+                        option(value=id)= v.name
+            div.col-sm-1.text-center OR
+            div.col-sm-2
+                a.btn.btn-default Create Collection
+        div.form-group
+            label.col-sm-3.control-label(for="coding-rules") Coding Rule Set&nbsp;
+                span#coding-help.glyphicon.glyphicon-info-sign.text-info(data-container="body", data-toggle="popover", data-placement="bottom", data-content="Coding vocabulary with optional quantitative ranges applied.", data-trigger="hover")
+            div.col-sm-6
+                select#codingrules.form-control(name="codingrules", style='width: 100%')
+                    each v, i in rules
+                        - var id = v._id.toString()
+                        option(value=id)= v.name
+            div.col-sm-1.text-center OR
+            div.col-sm-2
+                a.btn.btn-default Create Coding Rules
+        div.form-group
+            label.col-sm-3.control-label(for="coding-rules-fixed") Fixed Coding&nbsp;
+                span#coding-help.glyphicon.glyphicon-info-sign.text-info(data-container="body", data-toggle="popover", data-placement="bottom", data-content="Coding vocabulary with optional quantitative ranges applied.", data-trigger="hover")
+            div.col-sm-6
+                select#codingfixed.form-control(name='codingfixed', style='width: 100%')
+                    option(value="true") Fix the coding so that users must adhere to a set vocabulary
+                    option(value="false") Allow users to add terms to the coding set
+        div.form-group
+            label.col-sm-3.control-label Document Permissions
+            div.col-sm-9
+                div.col-sm-12
+                    p
+                        b All Registered Users
+                    select#regusers.form-control(name="regusers")
+                        option(value="none") Have no access
+                        option(value="view") Can view only
+                        option(value="code") Can code
+                        option(value="anot") Can annotate
+                        option(value="full") Can code and annotate
+                div.col-sm-12(style="margin-top: 25px;")
+                    p
+                        b User Group Members
+                        i  (settings here may be overridden by All Registered Users access levels above)
+                    select#grpusers.form-control(name="grpusers")
+                        option(value="none") Have no access
+                        option(value="view") Can view only
+                        option(value="code") Can code
+                        option(value="anot") Can annotate
+                        option(value="full") Can code and annotate
+                div.col-sm-12(style="margin-top: 25px;")
+                    p
+                        b Coding and Annotation Visibility
+                    select#cavisible.form-control(name="cavisible")
+                        option(value="none") Users see only own coding and annotations
+                        option(value="code") Users see others' coding but NOT annotations
+                        option(value="anot") Users see others' annotations but NOT coding
+                        option(value="full") Users see all coding and annotations
+        div.form-group
+            label.col-sm-3.control-label(for="metadata") Additional Information&nbsp;
+                span#metadata-help.glyphicon.glyphicon-info-sign.text-info(data-container="body", data-toggle="popover", data-placement="bottom", data-content="Metadata about the document that is helpful in understanding its origins or content.", data-trigger="hover")
+            div.col-sm-9
+                table.table.table-condensed.table-hover.table-respon#tab_logic
+                    tr
+                        th.text-center Attribute
+                        th.text-center Value
+                        th
+                    tr#md0
+                        td(style='width: 40%')
+                            select#att0.form-control.input-md(name='att0', style='width: 100%')
+                                option
+                                option Date
+                                option Description
+                                option Location
+                                option Source
+                                option Year
+                        td(style='width: 40%')
+                            input.form-control(type="text", name='val0', placeholder='Value')
+                        td.text-center(style="vertical-align: middle; width: 20%;")
+                            a#add_row.btn.btn-link
+                                span.glyphicon.glyphicon-plus-sign.text-success
+                            a#0.delete-row.btn.btn-link
+                                span.glyphicon.glyphicon-remove-sign.text-danger
+        div.form-group
+            div.col-sm-offset-3.col-sm-9
+                button#addDoc.btn.btn-primary(type="submit") Add Document

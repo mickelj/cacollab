@@ -5,7 +5,7 @@ block workspace
         small.text-danger &nbsp; (#[span.glyphicon.glyphicon-asterisk.text-danger] required)
     form#formAddDoc.form-horizontal(method="post", action="/document/new")
         div.form-group
-            label.col-sm-3.control-label(for="name") Name
+            label.col-sm-3.control-label(for="name") Title
                 span.glyphicon.glyphicon-asterisk.text-danger
             div.col-sm-9
                 input#name.form-control(type="text", placeholder="Title of Document", name="name")
@@ -27,9 +27,10 @@ block workspace
             label.col-sm-3.control-label(for="groups") Assign to User Group(s)&nbsp;
                 span#usergroup-help.glyphicon.glyphicon-info-sign.text-info(data-container="body", data-toggle="popover", data-placement="bottom", data-content="User groups are sets of users who will have common access to the document (i.e. a course of students, a set of researchers).", data-trigger="hover")
             div.col-sm-6
-                select#usergroups.form-control(style='width: 100%', multiple='multiple')
+                select#usergroups.form-control(name="usergroups", style='width: 100%', multiple='multiple')
                     each v, i in groups
-                        option= v.name
+                        - var id = v._id.toString()
+                        option(value=id)= v.name
             div.col-sm-1.text-center OR
             div.col-sm-2
                 a.btn.btn-default Create User Group
@@ -37,52 +38,61 @@ block workspace
             label.col-sm-3.control-label(for="collections") Part of Collection(s)&nbsp;
                 span#collection-help.glyphicon.glyphicon-info-sign.text-info(data-container="body", data-toggle="popover", data-placement="bottom", data-content="Collections are sets of documents with similar characteristics or coding rules.", data-trigger="hover")
             div.col-sm-6
-                select#collections.form-control(style='width: 100%', multiple='multiple')
+                select#collections.form-control(name="collections", style='width: 100%', multiple='multiple')
                     each v, i in collections
-                        option= v.name
+                        - var id = v._id.toString()
+                        option(value=id)= v.name
             div.col-sm-1.text-center OR
             div.col-sm-2
                 a.btn.btn-default Create Collection
         div.form-group
-            label.col-sm-3.control-label(for="coding-rules") Coding Rules&nbsp;
+            label.col-sm-3.control-label(for="coding-rules") Coding Rule Set&nbsp;
                 span#coding-help.glyphicon.glyphicon-info-sign.text-info(data-container="body", data-toggle="popover", data-placement="bottom", data-content="Coding vocabulary with optional quantitative ranges applied.", data-trigger="hover")
             div.col-sm-6
-                select#coding-rules.form-control(style='width: 100%', multiple='multiple')
+                select#codingrules.form-control(name="codingrules", style='width: 100%')
                     each v, i in rules
-                        option= v.name
+                        - var id = v._id.toString()
+                        option(value=id)= v.name
             div.col-sm-1.text-center OR
             div.col-sm-2
                 a.btn.btn-default Create Coding Rules
+        div.form-group
+            label.col-sm-3.control-label(for="coding-rules-fixed") Fixed Coding&nbsp;
+                span#coding-help.glyphicon.glyphicon-info-sign.text-info(data-container="body", data-toggle="popover", data-placement="bottom", data-content="Coding vocabulary with optional quantitative ranges applied.", data-trigger="hover")
+            div.col-sm-6
+                select#codingfixed.form-control(name='codingfixed', style='width: 100%')
+                    option(value="true") Fix the coding so that users must adhere to a set vocabulary
+                    option(value="false") Allow users to add terms to the coding set
         div.form-group
             label.col-sm-3.control-label Document Permissions
             div.col-sm-9
                 div.col-sm-12
                     p
                         b All Registered Users
-                    select#regusers.form-control
-                        option(value="reg_none") No access
-                        option(value="reg_view") Can view only
-                        option(value="reg_code") Can code
-                        option(value="reg_anot") Can annotate
-                        option(value="reg_full") Can code and annotate
+                    select#regusers.form-control(name="regusers")
+                        option(value="none") Have no access
+                        option(value="view") Can view only
+                        option(value="code") Can code
+                        option(value="anot") Can annotate
+                        option(value="full") Can code and annotate
                 div.col-sm-12(style="margin-top: 25px;")
                     p
                         b User Group Members
                         i  (settings here may be overridden by All Registered Users access levels above)
-                    select#grpusers.form-control
-                        option(value="grp_none") Have no access
-                        option(value="grp_view") Can view only
-                        option(value="grp_code") Can code
-                        option(value="grp_anot") Can annotate
-                        option(value="grp_full") Can code and annotate
+                    select#grpusers.form-control(name="grpusers")
+                        option(value="none") Have no access
+                        option(value="view") Can view only
+                        option(value="code") Can code
+                        option(value="anot") Can annotate
+                        option(value="full") Can code and annotate
                 div.col-sm-12(style="margin-top: 25px;")
                     p
                         b Coding and Annotation Visibility
-                    select#cavisible.form-control
-                        option(value="vis_none") Users see only own coding and annotations
-                        option(value="vis_code") Users see others' coding but NOT annotations
-                        option(value="vis_anot") Users see others' annotations but NOT coding
-                        option(value="vis_full") Users see all coding and annotations
+                    select#cavisible.form-control(name="cavisible")
+                        option(value="none") Users see only own coding and annotations
+                        option(value="code") Users see others' coding but NOT annotations
+                        option(value="anot") Users see others' annotations but NOT coding
+                        option(value="full") Users see all coding and annotations
         div.form-group
             label.col-sm-3.control-label(for="metadata") Additional Information&nbsp;
                 span#metadata-help.glyphicon.glyphicon-info-sign.text-info(data-container="body", data-toggle="popover", data-placement="bottom", data-content="Metadata about the document that is helpful in understanding its origins or content.", data-trigger="hover")

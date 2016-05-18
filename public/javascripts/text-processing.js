@@ -67,9 +67,9 @@ function doLookUp(where, search) {
 	openInNewWindow(lookUp[where].url.fill("search", encodeURIComponent(search)));
 }
 
-function doSaveNewAnnotation(data, newId, posX, posY) {
+function doSaveNewAnnotation(data, posX, posY) {
 	$.ajax({
-		url: "ajax/newannotation",
+		url: "/notes/save",
 		type: "post",
 		data: data,
 		dataType: "json",
@@ -80,8 +80,6 @@ function doSaveNewAnnotation(data, newId, posX, posY) {
 				return;
 			}
 			newAnnotationIds.push({
-				id: data.id,
-				newId: newId,
 				x: posX,
 				y: posY
 			});

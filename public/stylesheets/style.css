@@ -55,6 +55,10 @@ a.btn-default {
     color: #000;
 }
 
+#notetext {
+    letter-spacing: .25px;
+}
+
 a#add_row:hover, a.delete-row:hover {
     text-decoration:none;
 }

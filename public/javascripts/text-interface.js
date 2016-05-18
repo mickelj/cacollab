@@ -1023,7 +1023,7 @@ function openNewAnnotation(text, location, x, y) {
 	var newAnnDiv = $.fromTemplate("newAnnotationTemplate");
 
 	var $dialog = newAnnDiv.dialog({
-		title: text.brief(),
+		title: "New Annotation",
 		minWidth: 250,
 		minHeight: 28,
 		width: 450,
@@ -1035,9 +1035,9 @@ function openNewAnnotation(text, location, x, y) {
 		modal: true
 	});
 
-	newAnnDiv.find("#saveNewAnn").click(function () {
-		alert("Saved!");
-	});
+	newAnnDiv.find("#tokenStart").val(location.start);
+	newAnnDiv.find("#tokenEnd").val(location.end);
+	newAnnDiv.find("#notetext").text('"' + text.brief() + '"');
 
 	newAnnDiv.find("#closeNewAnn").click(function () {
 		$dialog.dialog( "close" );
@@ -1047,9 +1047,16 @@ function openNewAnnotation(text, location, x, y) {
 
 	newAnnDiv.find("input[name=text]").val(text);
 
-
-
-	//newAnnDiv.submit(saveNewAnnotation);
+	newAnnDiv.on('submit', function (e) {
+		e.preventDefault();
+		var data = newAnnDiv.find("#newAnnForm").serializeArray();
+		$.post('/note/save', data, function(data) {
+			newAnnDiv.html(data);
+			setTimeout(function() {
+				$dialog.dialog("close");
+			}, 3000);
+		});
+	});
 
 	newAnnDiv.find("input[name=tags]").autocomplete({
 		minLength: 0,
@@ -1135,14 +1142,12 @@ function closeNewAnnotationById(id) {
 	$(div).remove();
 }
 
-function saveNewAnnotation(event) {
-	event.preventDefault();
+function saveNewAnnotation(e, location) {
+	e.preventDefault();
 
 	var data = $(this).closest("form").serialize();
-	var offset = $(this).closest(".newAnnotationDialog").offset();
-	var newId = findInt($(this).closest(".newAnnotationDialog").prop("id"));
 
-	doSaveNewAnnotation(data, newId, offset.left, offset.top);
+	//doSaveNewAnnotation(data, location.start, location.end);
 
 	//$(this).closest(".ui-dialog-content").dialog("close");
 	$(this).find(".saveAnnotationButton").button("option", "disabled", true);
