@@ -4,7 +4,8 @@ var singleNoteSchema = mongoose.Schema({
     owner: String,
     note: String,
     tokenStart: Number,
-    tokenEnd: Number
+    tokenEnd: Number,
+    shorttext: String
 }, { timestamps: true });
 
 var noteSchema = mongoose.Schema({

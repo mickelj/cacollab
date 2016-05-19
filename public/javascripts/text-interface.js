@@ -1035,9 +1035,11 @@ function openNewAnnotation(text, location, x, y) {
 		modal: true
 	});
 
+	var docid = newAnnDiv.find("#document").val();
 	newAnnDiv.find("#tokenStart").val(location.start);
 	newAnnDiv.find("#tokenEnd").val(location.end);
 	newAnnDiv.find("#notetext").text('"' + text.brief() + '"');
+	newAnnDiv.find("#shorttext").val(text.brief());
 
 	newAnnDiv.find("#closeNewAnn").click(function () {
 		$dialog.dialog( "close" );
@@ -1050,11 +1052,12 @@ function openNewAnnotation(text, location, x, y) {
 	newAnnDiv.on('submit', function (e) {
 		e.preventDefault();
 		var data = newAnnDiv.find("#newAnnForm").serializeArray();
-		$.post('/note/save', data, function(data) {
-			newAnnDiv.html(data);
+		$.post('/note/save', data, function(res) {
+			newAnnDiv.html(res);
 			setTimeout(function() {
 				$dialog.dialog("close");
-			}, 3000);
+				socket.emit('refresh_notes', docid);
+			}, 2000);
 		});
 	});
 

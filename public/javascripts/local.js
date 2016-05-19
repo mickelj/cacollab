@@ -54,4 +54,26 @@ $(document).ready(function(){
     $('#metadata-help').popover();
     $('#contributors-help').popover();
     $('#coding-help').popover();
+
+    $('.annotation-panel').on({
+        mouseenter: function() {
+            var start = $(this).data('start');
+            var end = $(this).data('end');
+            $('#t' + start).addClass('highlighted-start');
+            for (var i = start; i <= end; i++) {
+                $('#t' + i).addClass('highlighted');
+            }
+            $('#t' + end).addClass('highlighted-end');
+        },
+        mouseleave: function() {
+            var start = $(this).data('start');
+            var end = $(this).data('end');
+            $('#t' + start).removeClass('highlighted-start');
+            for (var i = start; i <= end; i++) {
+                $('#t' + i).removeClass('highlighted');
+            }
+            $('#t' + end).removeClass('highlighted-end');
+        }
+    });
+
 });

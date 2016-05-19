@@ -6,12 +6,14 @@ var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 var routes = require('./routes/index');
 var users = require('./routes/users');
-var docs = require('./routes/docs');
 var notes = require('./routes/notes');
-//var db = require('./utils/db');
 var db = require('./utils/dbmodel');
 
 var app = express();
+
+var server = require('http').Server(app);
+var io = require('socket.io')(server);
+var docs = require('./routes/docs')(io);
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
@@ -29,7 +31,6 @@ app.use('/', routes);
 app.use('/users', users);
 app.use('/document', docs);
 app.use('/note', notes);
-
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
@@ -70,4 +71,4 @@ db.connect('mongodb://localhost:27017/cacollab', function(err) {
   }
 });
 
-module.exports = app;
+module.exports = {app: app, server: server};

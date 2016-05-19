@@ -7,6 +7,7 @@ block workspace
                 i#notetext
         form#newAnnForm(class='newAnnotationForm', enctype="application/x-www-form-urlencoded", accept-charset="UTF-8")
             input#document(type="hidden", name="document", value=docid)
+            input#shorttext(type="hidden", name="shorttext")
             input#tokenStart(type="hidden", name="tokenStart")
             input#tokenEnd(type="hidden", name="tokenEnd")
             textarea#note(name='note', style='width:100%; margin-bottom: 15px;')
@@ -28,3 +29,27 @@ block workspace
 
 block control-panel
     div.annotation-list
+        ul.nav.nav-tabs(role="tablist")
+            li.active(role="presentation")
+                a(href="#coding", aria-controls="coding", role="tab", data-toggle="tab") Coding
+            li(role="presentation")
+                a(href="#annotations", aria-controls="annotations", role="tab", data-toggle="tab") Annotations&nbsp;
+                    span.badge#note-badge
+
+        div.tab-content
+            div.tab-pane.active#coding(role="tab-panel")
+                p Coding goes here
+            div.tab-pane#annotations(role="tab-panel")
+                div.panel-group#accordion(role="tablist", aria-multiselectable="true")
+                script.
+                    $(document).ready(function() {
+                        socket.emit('refresh_notes', "#{docid}");
+                        socket.on('draw_notes', function(notes) {
+                            $('#accordion').html("");
+                            $('#note-badge').html(notes.length);
+                            console.log(notes);
+                            for (var n = 0; n < notes.length; n++) {
+                                $('#accordion').append("<div class='panel panel-default annotation-panel' data-start='" + notes[n].tokenStart + "' data-end='" + notes[n].tokenEnd + "'><div class='panel-heading' role='tab' id='heading" + n + "'><p class='panel-title'><a role='button' data-toggle='collapse' data-parent='#accordion' href='#collapse" + n + "' aria-expanded='true' aria-controls='collapse" + n + "'><span><b><i>" + notes[n].shorttext + "</i></b><span class='pull-right'>" + notes[n].updatedAt + "</span></a></p></div><div class='panel-collapse collapse' id='collapse" + n + "' role='tabpanel' aria-labelledby='heading" + n + "'><div class='panel-body'>" + notes[n].note + "</div></div></div>");
+                            }
+                        });
+                    });
