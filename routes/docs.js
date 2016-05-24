@@ -1,46 +1,36 @@
 module.exports = function(io) {
     var express = require('express');
     var router = express.Router();
+    var Annotation = require('../model/Annotation').Annotation;
+    var Coding = require('../model/Coding').Coding;
+    var CodingRule = require('../model/CodingRule').CodingRule;
     var Document = require('../model/Document').Document;
     var Collection = require('../model/Collection').Collection;
     var Group = require('../model/Group').Group;
-    var CodingRule = require('../model/CodingRule').CodingRule;
     var tok = require('../utils/createTokens');
     var js2xmlparser = require("js2xmlparser");
-    var request = require('request');
-
-    io.on('connection', function (socket) {
-        socket.on('refresh_notes', function (data) {
-            request('http://localhost:3000/note/' + data, function(err, response, notes) {
-                if (err || response.statusCode !== 200) {
-                    return res.sendStatus(500);
-                }
-                io.emit('draw_notes', JSON.parse(notes).sort(function(a, b) { return b.updatedAt.localeCompare(a.updatedAt); }));
-            });
-        });
-    });
-
+    var async = require("async");
 
     var getFieldValues = new Promise(function(resolve, reject) {
-        var fieldVals = {};
-        Collection.find( { owner: "57336169be1fd8064771ab91" }, null, { sort: {name: 1}}, function (err, colls) {
-            fieldVals.collections = colls;
-        }).then(function() {
-            Group.find( { owner: "57336169be1fd8064771ab91" }, null, { sort: {name: 1}}, function (err, grps) {
-                fieldVals.groups = grps;
-            }).then(function() {
-                CodingRule.find( { "owner": "57336169be1fd8064771ab91" }, null, { sort: {name: 1}}, function (err, crs) {
-                    fieldVals.rules = crs;
-                }).then(function() {
-                    resolve(fieldVals);
-                }).catch(function() {
-                    reject("Error retrieving coding rules");
+        async.parallel({
+            collections: function(cb) {
+                Collection.find( { owner: "57336169be1fd8064771ab91" }, null, { sort: {name: 1}}, function (err, colls) {
+                    cb(null, colls);
                 });
-            }).catch(function() {
-                reject("Error retrieving user groups");
-            });
-        }).catch(function() {
-            reject("Error retrieving collections");
+            },
+            groups: function(cb) {
+                Group.find( { owner: "57336169be1fd8064771ab91" }, null, { sort: {name: 1}}, function (err, grps) {
+                    cb(null, grps);
+                });
+            },
+            rules: function(cb) {
+                CodingRule.find( { "owner": "57336169be1fd8064771ab91" }, null, { sort: {name: 1}}, function (err, crs) {
+                    cb(null, crs);
+                });
+            }
+        }, function (err, result) {
+            if (err) reject(err);
+            resolve(result);
         });
     });
 
@@ -54,9 +44,43 @@ module.exports = function(io) {
     router.get('/:id/code', function(req, res, next) {
         var id = req.params.id;
 
-        Document.findById(id, function (err, doc) {
-            if(err) throw err;
-            res.render('document/code', { title: doc.title, docid: doc._id.toString(), tokens: doc.tokens });
+        async.parallel({
+            doc: function(cb1) {
+                async.waterfall([
+                    function(cb2) {
+                        Document.findById(id, function (err, doc) {
+                            cb2(null, doc);
+                        });
+                    },
+                    function(doc, cb3) {
+                        CodingRule.findById( doc.codingset, function (err, crs) {
+                            cb3(null, {doc: doc, crs: crs});
+                        });
+                    }], function (err, result) {
+                        cb1(null, result);
+                    });
+            },
+            codes: function(cb4) {
+                Coding.findOne({"document": id }, null, function(err, codes) {
+                    if (codes) {
+                        cb4(null, codes.codes);
+                    } else {
+                        cb4(null, []);
+                    }
+                });
+            },
+            notes: function(cb5) {
+                Annotation.findOne({"document": id }, null, function(err, notes) {
+                    if (notes) {
+                        cb5(null, notes.notes);
+                    } else {
+                        cb5(null, []);
+                    }
+                });
+            }
+        }, function(err, results) {
+            if (err) res.send(err);
+            res.render('document/code', { title: results.doc.doc.title, doc: results.doc.doc, crs: results.doc.crs,  codes: results.codes, notes: results.notes.sort(function(a, b) { return b.updatedAt.toString().localeCompare(a.updatedAt.toString()); }) });
         });
     });
 

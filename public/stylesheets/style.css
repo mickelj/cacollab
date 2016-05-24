@@ -22,6 +22,10 @@ a.btn-default {
     text-decoration: underline;
 }
 
+div[id^="range-field-"] {
+    display: none;
+}
+
 #control-panel {
     background-color: #000;
     color: #fff;
@@ -31,7 +35,7 @@ a.btn-default {
     top: 0;
 }
 
-#newAnnotationTemplate {
+#newCodingTemplate, #newAnnotationTemplate {
     color: #000;
     display: none;
 }
@@ -43,7 +47,7 @@ a.btn-default {
     overflow-y: auto;
     overflow-x: hidden;
     background-color: #eee;
-    border-radius: 5px;
+    border-radius: 3px;
     padding: 10px;
     color: #000;
 }
@@ -79,6 +83,22 @@ a.btn-default {
 
 .tab-content {
     padding-top: 10px;
+}
+
+.panel-heading {
+    padding: 10px;
+}
+
+.panel-heading p {
+    line-height: 2.25em;
+}
+
+.material-icons {
+    float: left;
+}
+
+.btn-sm {
+    line-height: 1.75em;
 }
 
 #notetext {

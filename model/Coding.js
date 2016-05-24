@@ -5,7 +5,8 @@ var singleCodeSchema = mongoose.Schema({
     code: String,
     value: Number,
     tokenStart: Number,
-    tokenEnd: Number
+    tokenEnd: Number,
+    shorttext: String
 }, { timestamps: true });
 
 var codingSchema = mongoose.Schema({

@@ -7,13 +7,36 @@ var bodyParser = require('body-parser');
 var routes = require('./routes/index');
 var users = require('./routes/users');
 var notes = require('./routes/notes');
+var codes = require('./routes/codes');
 var db = require('./utils/dbmodel');
 
 var app = express();
 
+app.locals.moment = require('moment');
+
 var server = require('http').Server(app);
 var io = require('socket.io')(server);
 var docs = require('./routes/docs')(io);
+
+io.on('connection', function (socket) {
+    socket.on('join-room', function(room) {
+        socket.join(room);
+        console.log('joined ' + room);
+    });
+
+    socket.on('disconnect', function() {
+    });
+
+    socket.on('refresh_codes', function(data) {
+        io.to(data.room).emit('draw_codes', data.data);
+    });
+
+    socket.on('refresh_notes', function(data) {
+        //nsp.emit('draw_notes', JSON.parse(notes).sort(function(a, b) { return b.updatedAt.localeCompare(a.updatedAt); }));
+        io.to(data.room).emit('draw_notes', data.data);
+    });
+
+});
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
@@ -31,6 +54,7 @@ app.use('/', routes);
 app.use('/users', users);
 app.use('/document', docs);
 app.use('/note', notes);
+app.use('/code', codes);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

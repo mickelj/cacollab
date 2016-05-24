@@ -40,11 +40,11 @@ function prepareInterface() {
 
 	$(".uiButton").button();
 	$(".uiButtonSet").buttonset();
-	$(".uiTabs").tabs();
-	$(".uiAccordian").accordion({
-		collapsible: true,
-		autoHeight: false
-	});
+	// $(".uiTabs").tabs();
+	// $(".uiAccordian").accordion({
+	// 	collapsible: true,
+	// 	autoHeight: false
+	// });
 
 	$("#hideBanner").button()
 		.click(hideBanner);
@@ -1018,12 +1018,30 @@ function goToAnn(id, tab) {
 // new annotations
 
 function openNewAnnotation(text, location, x, y) {
-	var id = ++newAnnotationCount;
+	var newAnnDiv, title;
 
-	var newAnnDiv = $.fromTemplate("newAnnotationTemplate");
+	if (mode === 'a') {  // mode is 'annotation'
+		newAnnDiv = $.fromTemplate("newAnnotationTemplate");
+		title = "New Annotation";
+
+		newAnnDiv.on('submit', function (e) {
+			e.preventDefault();
+			var data = newAnnDiv.find("#newAnnForm").serializeArray();
+			$.post('/note/save', data, function(res) {
+				newAnnDiv.html(res);
+				setTimeout(function() {
+					$dialog.dialog("close");
+					socket.emit('refresh_notes', {room: docid, data: data});
+				}, 2000);
+			});
+		});
+	} else {			// mode is 'coding'
+		newAnnDiv = $.fromTemplate("newCodingTemplate");
+		title = "New Coding";
+	}
 
 	var $dialog = newAnnDiv.dialog({
-		title: "New Annotation",
+		title: title,
 		minWidth: 250,
 		minHeight: 28,
 		width: 450,
@@ -1045,61 +1063,12 @@ function openNewAnnotation(text, location, x, y) {
 		$dialog.dialog( "close" );
 	});
 
-	newAnnDiv.closest(".ui-dialog").find(".ui-dialog-title").attr("title", text);
-
-	newAnnDiv.find("input[name=text]").val(text);
-
-	newAnnDiv.on('submit', function (e) {
-		e.preventDefault();
-		var data = newAnnDiv.find("#newAnnForm").serializeArray();
-		$.post('/note/save', data, function(res) {
-			newAnnDiv.html(res);
-			setTimeout(function() {
-				$dialog.dialog("close");
-				socket.emit('refresh_notes', docid);
-			}, 2000);
-		});
-	});
-
 	newAnnDiv.find("input[name=tags]").autocomplete({
 		minLength: 0,
 		source: autoCompleteTagResults,
 		focus: $.alwaysFalse,
 		select: autoCompleteTagSelect
 	});
-	newAnnDiv.find(".lookUpDropDown").dropdown({
-		autocomplete: {
-			select: newLookUpSelect
-		},
-		button: {
-			icons: {
-				primary: "ui-icon-search",
-				secondary: "ui-icon-carat-1-s"
-			},
-			text: false,
-			label: "Look up..."
-		}
-	});
-	newAnnDiv.find(".colourDropDown").dropdown({
-		autocomplete: {
-			select: newColourSelect
-		},
-		button: {
-			icons: {
-				primary: "ui-icon-palette",
-				secondary: "ui-icon-carat-1-s"
-			},
-			text: false,
-			label: "Choose colour..."
-		}
-	});
-	newAnnDiv.find("input[name=colour]").val(latestColour);
-	if (colourLabels[latestColour]) {
-		newAnnDiv.find(".colourName").text(colourLabels[latestColour]);
-		newAnnDiv.find(".colourName").attr("title", latestColour.capitalise());
-	} else {
-		newAnnDiv.find(".colourName").text(latestColour.capitalise());
-	}
 
 	if (highlightMethod != "d") {
 		$(window).scrollLeft(x);

@@ -1,6 +1,44 @@
 extends ../layout.pug
 
 block workspace
+    - var docid = doc._id.toString()
+    div#newCodingTemplate
+        p
+            b
+                i#notetext
+        form#newCodeForm(class='newCodeForm', enctype="application/x-www-form-urlencoded", accept-charset="UTF-8")
+            input#document(type="hidden", name="document", value=docid)
+            input#shorttext(type="hidden", name="shorttext")
+            input#tokenStart(type="hidden", name="tokenStart")
+            input#tokenEnd(type="hidden", name="tokenEnd")
+            if doc.codingflex
+                input#codefield.form-control(type="text", name="codefield", style='margin-bottom: 15px;')
+            else
+                if crs && crs.coding
+                    select#codefield.form-control(name="codefield", style='margin-bottom: 15px;')
+                        option(value="", disabled, selected) Choose a code
+                        each v, i in crs.coding
+                            option(value=v.code)= v.code
+
+                    each v, i in crs.coding
+                        if v.min && v.max
+                            - var mid = (Math.abs(v.max) - Math.abs(v.min)) / 2
+                            div.coderange(id='range-field-' + v.code)
+                                div
+                                    label(for='range-input-' + v.code) #{v.code}:&nbsp;
+                                        span(id='range-input-label-' + v.code)
+                                div.pull-left= v.min
+                                div.pull-right= v.max
+                                div.text-center= mid
+                                input.form-control(type="range", value="0", name="range-input-" + v.code, min=v.min max=v.max, id="range-input-" + v.code)
+
+            button#closeNewAnn.btn.btn-sm.btn-danger.col-xs-3
+                span.material-icons cancel
+                |  Cancel
+            button#saveNewAnn.btn.btn-sm.btn-success.col-xs-3.col-xs-offset-6(type="submit")
+                span.material-icons check_circle
+                |  Save
+
     div#newAnnotationTemplate
         p
             b
@@ -10,18 +48,18 @@ block workspace
             input#shorttext(type="hidden", name="shorttext")
             input#tokenStart(type="hidden", name="tokenStart")
             input#tokenEnd(type="hidden", name="tokenEnd")
-            textarea#note(name='note', style='width:100%; margin-bottom: 15px;')
-            button#closeNewAnn.btn.btn-sm.btn-default.col-xs-3
-                span.glyphicon.glyphicon-remove.text-danger
+            textarea#note.form-control(name='note', style='margin-bottom: 15px;')
+            button#closeNewAnn.btn.btn-sm.btn-danger.col-xs-3
+                i.material-icons cancel
                 |  Cancel
-            button#saveNewAnn.btn.btn-sm.btn-primary.col-xs-3.col-xs-offset-6(type="submit")
-                span.glyphicon.glyphicon-ok
+            button#saveNewAnn.btn.btn-sm.btn-success.col-xs-3.col-xs-offset-6(type="submit")
+                i.material-icons check_circle
                 |  Save
 
     h2= title
 
     div#textHolder
-        each val, index in tokens
+        each val, index in doc.tokens
             if val == '\n' || val == '\r' || val == '\r\n'
                 br(id=index)
             else
@@ -29,27 +67,54 @@ block workspace
 
 block control-panel
     div.annotation-list
-        ul.nav.nav-tabs(role="tablist")
+        script.
+            var socket = io();
+        ul.nav.nav-pills(role="tablist")
             li.active(role="presentation")
-                a(href="#coding", aria-controls="coding", role="tab", data-toggle="tab") Coding
+                a#coding-mode(href="#coding", aria-controls="coding", role="tab", data-toggle="tab") Coding
             li(role="presentation")
-                a(href="#annotations", aria-controls="annotations", role="tab", data-toggle="tab") Annotations&nbsp;
-                    span.badge#note-badge
-
+                a#annotation-mode(href="#annotations", aria-controls="annotations", role="tab", data-toggle="tab") Annotations&nbsp;
+                    strong.badge#note-badge
+                        if notes
+                            = notes.length
         div.tab-content
             div.tab-pane.active#coding(role="tab-panel")
-                p Coding goes here
+                div.panel-group#accordion-codes(role="tablist", aria-multiselectable="true")
+                    if crs && crs.coding
+                        each v, i in crs.coding
+                            div.panel.panel-default.coding-panel
+                                div.panel-heading(role='tab', id='cheading' + i)
+                                    p.panel-title
+                                        a(role='button', data-toggle='collapse', data-parent='#accordion-codes', href='#ccollapse' + i, aria-expanded='true', aria-controls='ccollapse' + i)
+                                            b #{v.code}&nbsp;
+                                            span.badge(id='badge' + v.code)
+                                div.panel-collapse.collapse(id='ccollapse' + i, role='tabpanel', aria-labelledby='cheading' + i)
+                                    div.panel-body
+
             div.tab-pane#annotations(role="tab-panel")
-                div.panel-group#accordion(role="tablist", aria-multiselectable="true")
+                div.panel-group#accordion-notes(role="tablist", aria-multiselectable="true")
+                    if notes
+                        each v, i in notes
+                            - var ndate = moment(v.updatedAt).format("YYYY-MM-DD HH:mm:ss")
+                            div.panel.panel-default.annotation-panel(data-start=v.tokenStart, data-end=v.tokenEnd)
+                                div.panel-heading(role='tab', id='heading' + i)
+                                    a(role='button', href='#t' + v.tokenStart, title='Jump to phrase')
+                                        span.material-icons find_in_page
+                                    p.panel-title &nbsp;&nbsp;
+                                        a(role='button', data-toggle='collapse', data-parent='#accordion-notes', href='#collapse' + i, aria-expanded='true', aria-controls='collapse' + i)
+                                            span
+                                                b &quot;#{v.shorttext}&quot;
+                                            span.pull-right= ndate
+                                div.panel-collapse.collapse(id='collapse' + i, role='tabpanel', aria-labelledby='heading' + i)
+                                    div.panel-body= v.note
                 script.
                     $(document).ready(function() {
-                        socket.emit('refresh_notes', "#{docid}");
+                        socket.emit('join-room', '#{docid}');
                         socket.on('draw_notes', function(notes) {
-                            $('#accordion').html("");
-                            $('#note-badge').html(notes.length);
-                            console.log(notes);
-                            for (var n = 0; n < notes.length; n++) {
-                                $('#accordion').append("<div class='panel panel-default annotation-panel' data-start='" + notes[n].tokenStart + "' data-end='" + notes[n].tokenEnd + "'><div class='panel-heading' role='tab' id='heading" + n + "'><p class='panel-title'><a role='button' data-toggle='collapse' data-parent='#accordion' href='#collapse" + n + "' aria-expanded='true' aria-controls='collapse" + n + "'><span><b><i>" + notes[n].shorttext + "</i></b><span class='pull-right'>" + notes[n].updatedAt + "</span></a></p></div><div class='panel-collapse collapse' id='collapse" + n + "' role='tabpanel' aria-labelledby='heading" + n + "'><div class='panel-body'>" + notes[n].note + "</div></div></div>");
-                            }
+                            var count = parseInt($('#note-badge').text()) + 1;
+                            $('#note-badge').text(count);
+                            var ndate = moment().format("YYYY-MM-DD HH:mm:ss");
+                            $('#accordion-notes').prepend("<div class='panel panel-default annotation-panel' data-start='" + notes[2].value + "' data-end='" + notes[3].value + "'><div class='panel-heading' role='tab' id='heading" + count + "'><a role='button' href='#t" + notes[2].value + "' title='Jump to phrase'><span class='material-icons'>find_in_page</span></a><p class='panel-title'>&nbsp;&nbsp;<a role='button' data-toggle='collapse' data-parent='#accordion-notes' href='#collapse" + count + "' aria-expanded='true' aria-controls='collapse" + count + "'><span><b>&quot;" + notes[1].value + "&quot;</b><span class='pull-right'>" + ndate + "</span></a></p></div><div class='panel-collapse collapse' id='collapse" + count + "' role='tabpanel' aria-labelledby='heading" + count + "'><div class='panel-body'>" + notes[4].value + "</div></div></div>");
                         });
+                        //socket.emit('refresh_notes', "#{doc._id}");
                     });

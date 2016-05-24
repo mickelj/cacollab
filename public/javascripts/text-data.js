@@ -15,6 +15,8 @@
  * limitations under the License.
  */
 
+var mode = 'c';
+
 var textId = 0;
 var sectionNumber = 0;
 var permissions;

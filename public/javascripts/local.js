@@ -6,6 +6,42 @@ $(window).on("resize load", function() {
 });
 
 $(document).ready(function(){
+    $("#coding-mode").on('click', function() {
+        mode = 'c';
+    });
+    $("#annotation-mode").on('click', function() {
+        mode = 'a';
+    });
+
+	$('div[id^="accordion-"]').on('click', 'a[href^="#t"]', function (e) {
+        if (location.pathname.replace(/^\//,'') == this.pathname.replace(/^\//,'') && location.hostname == this.hostname) {
+            var target = $(this.hash);
+            target = target.length ? target : $('[name=' + this.hash.slice(1) +']');
+            if (target.length) {
+                $('html,body').animate({
+                    scrollTop: target.offset().top - 200
+                }, 750, 'swing');
+                return false;
+            }
+        }
+	});
+
+    $('body').on('change', '#codefield', function(e) {
+        var code = $(this).val();
+
+        $("div[id^='range-field-']").hide();
+        $("input[id^='range-input-']").val(0);
+        $("div#range-field-" + code).show();
+        $("span#range-input-label-" + code).text("0");
+    });
+
+    $("body").on('input', "input[id^='range-input-']", function() {
+        var parts = $(this).attr('id').split("-");
+        var id = parts[2];
+
+        $("span#range-input-label-" + id).text($(this).val());
+    });
+
     $('select.input-md').select2({
         tags: true
     });
@@ -55,8 +91,7 @@ $(document).ready(function(){
     $('#contributors-help').popover();
     $('#coding-help').popover();
 
-    $('.annotation-panel').on({
-        mouseenter: function() {
+    $('div[id^="accordion-"]').on( "mouseenter", ".annotation-panel", function() {
             var start = $(this).data('start');
             var end = $(this).data('end');
             $('#t' + start).addClass('highlighted-start');
@@ -64,8 +99,8 @@ $(document).ready(function(){
                 $('#t' + i).addClass('highlighted');
             }
             $('#t' + end).addClass('highlighted-end');
-        },
-        mouseleave: function() {
+    });
+    $('div[id^="accordion-"]').on( "mouseleave", ".annotation-panel", function() {
             var start = $(this).data('start');
             var end = $(this).data('end');
             $('#t' + start).removeClass('highlighted-start');
@@ -73,7 +108,5 @@ $(document).ready(function(){
                 $('#t' + i).removeClass('highlighted');
             }
             $('#t' + end).removeClass('highlighted-end');
-        }
     });
-
 });
