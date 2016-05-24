@@ -2,59 +2,64 @@ extends ../layout.pug
 
 block workspace
     - var docid = doc._id.toString()
-    div#newCodingTemplate
-        p
-            b
-                i#notetext
+    div#newCodingTemplate.panel.panel-default
         form#newCodeForm(class='newCodeForm', enctype="application/x-www-form-urlencoded", accept-charset="UTF-8")
-            input#document(type="hidden", name="document", value=docid)
-            input#shorttext(type="hidden", name="shorttext")
-            input#tokenStart(type="hidden", name="tokenStart")
-            input#tokenEnd(type="hidden", name="tokenEnd")
-            if doc.codingflex
-                input#codefield.form-control(type="text", name="codefield", style='margin-bottom: 15px;')
-            else
-                if crs && crs.coding
-                    select#codefield.form-control(name="codefield", style='margin-bottom: 15px;')
-                        option(value="", disabled, selected) Choose a code
-                        each v, i in crs.coding
-                            option(value=v.code)= v.code
+            div.panel-body
+                p
+                    b
+                        i#notetext
+                    input#document(type="hidden", name="document", value=docid)
+                    input#shorttext(type="hidden", name="shorttext")
+                    input#tokenStart(type="hidden", name="tokenStart")
+                    input#tokenEnd(type="hidden", name="tokenEnd")
+                    input#codevalue(type="hidden", name="codevalue")
 
-                    each v, i in crs.coding
-                        if v.min && v.max
-                            - var mid = (Math.abs(v.max) - Math.abs(v.min)) / 2
-                            div.coderange(id='range-field-' + v.code)
-                                div
-                                    label(for='range-input-' + v.code) #{v.code}:&nbsp;
-                                        span(id='range-input-label-' + v.code)
-                                div.pull-left= v.min
-                                div.pull-right= v.max
-                                div.text-center= mid
-                                input.form-control(type="range", value="0", name="range-input-" + v.code, min=v.min max=v.max, id="range-input-" + v.code)
+                    if doc.codingflex
+                        input#codefield.form-control(type="text", name="codefield", style='margin-bottom: 15px;')
+                    else
+                        if crs && crs.coding
+                            select#codefield.form-control(name="codefield", style='margin-bottom: 15px;')
+                                option(value="", disabled, selected) Choose a code
+                                each v, i in crs.coding
+                                    option(value=v.code)= v.code
 
-            button#closeNewAnn.btn.btn-sm.btn-danger.col-xs-3
-                span.material-icons cancel
-                |  Cancel
-            button#saveNewAnn.btn.btn-sm.btn-success.col-xs-3.col-xs-offset-6(type="submit")
-                span.material-icons check_circle
-                |  Save
+                            each v, i in crs.coding
+                                if v.min && v.max
+                                    - var mid = (Math.abs(v.max) - Math.abs(v.min)) / 2
+                                    div.coderange(id='range-field-' + v.code)
+                                        div
+                                            label(for='range-input-' + v.code) #{v.code}:&nbsp;
+                                                span(id='range-input-label-' + v.code)
+                                        div.pull-left= v.min
+                                        div.pull-right= v.max
+                                        div.text-center= mid
+                                        input(type="range", value="0", name="codevalue-" + v.code, min=v.min max=v.max, id="range-input-" + v.code)
+            div.panel-footer
+                button#closeNewAnn.btn.btn-sm.btn-danger.col-xs-3
+                    span.material-icons cancel
+                    |  Cancel
+                button#saveNewCode.btn.btn-sm.btn-success.col-xs-3.col-xs-offset-6(type="submit", disabled)
+                    span.material-icons check_circle
+                    |  Save
 
-    div#newAnnotationTemplate
-        p
-            b
-                i#notetext
+    div#newAnnotationTemplate.panel.panel-default
         form#newAnnForm(class='newAnnotationForm', enctype="application/x-www-form-urlencoded", accept-charset="UTF-8")
-            input#document(type="hidden", name="document", value=docid)
-            input#shorttext(type="hidden", name="shorttext")
-            input#tokenStart(type="hidden", name="tokenStart")
-            input#tokenEnd(type="hidden", name="tokenEnd")
-            textarea#note.form-control(name='note', style='margin-bottom: 15px;')
-            button#closeNewAnn.btn.btn-sm.btn-danger.col-xs-3
-                i.material-icons cancel
-                |  Cancel
-            button#saveNewAnn.btn.btn-sm.btn-success.col-xs-3.col-xs-offset-6(type="submit")
-                i.material-icons check_circle
-                |  Save
+            div.panel-body
+                p
+                    b
+                        i#notetext
+                    input#document(type="hidden", name="document", value=docid)
+                    input#shorttext(type="hidden", name="shorttext")
+                    input#tokenStart(type="hidden", name="tokenStart")
+                    input#tokenEnd(type="hidden", name="tokenEnd")
+                    textarea#note.form-control(name='note')
+            div.panel-footer
+                button#closeNewAnn.btn.btn-sm.btn-danger.col-xs-3
+                    i.material-icons cancel
+                    |  Cancel
+                button#saveNewAnn.btn.btn-sm.btn-success.col-xs-3.col-xs-offset-6(type="submit", disabled)
+                    i.material-icons check_circle
+                    |  Save
 
     h2= title
 
@@ -90,6 +95,8 @@ block control-panel
                                             span.badge(id='badge' + v.code)
                                 div.panel-collapse.collapse(id='ccollapse' + i, role='tabpanel', aria-labelledby='cheading' + i)
                                     div.panel-body
+                    if codes
+                        - console.log(codes)
 
             div.tab-pane#annotations(role="tab-panel")
                 div.panel-group#accordion-notes(role="tablist", aria-multiselectable="true")

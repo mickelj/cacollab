@@ -6,11 +6,23 @@ $(window).on("resize load", function() {
 });
 
 $(document).ready(function(){
+    function resetCodeSliders() {
+        $("div[id^='range-field-']").hide();
+        $("input[id^='range-input-']").val(0);
+        $("input#codevalue").val(0);
+    }
+
     $("#coding-mode").on('click', function() {
         mode = 'c';
     });
     $("#annotation-mode").on('click', function() {
         mode = 'a';
+    });
+
+    $('body').on('dialogbeforeclose', '.ui-dialog', function() {
+        resetCodeSliders();
+        $("button#saveNewCode").prop("disabled", true);
+        $("button#saveNewAnn").prop("disabled", true);
     });
 
 	$('div[id^="accordion-"]').on('click', 'a[href^="#t"]', function (e) {
@@ -28,11 +40,10 @@ $(document).ready(function(){
 
     $('body').on('change', '#codefield', function(e) {
         var code = $(this).val();
-
-        $("div[id^='range-field-']").hide();
-        $("input[id^='range-input-']").val(0);
+        resetCodeSliders();
         $("div#range-field-" + code).show();
         $("span#range-input-label-" + code).text("0");
+        $("button#saveNewCode").prop("disabled", false);
     });
 
     $("body").on('input', "input[id^='range-input-']", function() {
@@ -40,6 +51,15 @@ $(document).ready(function(){
         var id = parts[2];
 
         $("span#range-input-label-" + id).text($(this).val());
+        $("input#codevalue").val($(this).val());
+    });
+
+    $("body").on('keyup', '#note', function() {
+        if ($(this).val().length > 0) {
+            $("button#saveNewAnn").prop("disabled", false);
+        } else {
+            $("button#saveNewAnn").prop("disabled", true);
+        }
     });
 
     $('select.input-md').select2({

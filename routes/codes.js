@@ -19,7 +19,7 @@ router.post('/save', function(req, res) {
     Coding.findOne({ "document": req.body.document }, null, function(err, doc) {
         if (err) return res.send(500, {error: err});
         if (doc) {
-            doc.codes.push({code: req.body.code, tokenStart: req.body.tokenStart, tokenEnd: req.body.tokenEnd, shorttext: req.body.shorttext});
+            doc.codes.push({code: req.body.code, value: req.body.codevalue, tokenStart: req.body.tokenStart, tokenEnd: req.body.tokenEnd, shorttext: req.body.shorttext});
             doc.save(function(err) {
                 if (err) return res.send(500, {error: err});
                 res.send("<h3 class='alert alert-success'>Coding updated</h3>");
@@ -29,7 +29,8 @@ router.post('/save', function(req, res) {
                 document: req.body.document,
                 codes: [{
                          shorttext: req.body.shorttext,
-                         code: req.body.code,
+                         code: req.body.codefield,
+                         value: req.body.codevalue,
                          tokenStart: req.body.tokenStart,
                          tokenEnd: req.body.tokenEnd
                        }]
@@ -40,7 +41,6 @@ router.post('/save', function(req, res) {
             });
         }
     });
-
 });
 
 module.exports = router;

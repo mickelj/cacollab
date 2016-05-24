@@ -5,6 +5,10 @@ header, footer {
     padding: 25px;
 }
 
+.panel {
+    margin-bottom: 5px;
+}
+
 #textHolder {
     line-height: 1.75em;
 }

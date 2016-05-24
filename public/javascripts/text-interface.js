@@ -1038,7 +1038,19 @@ function openNewAnnotation(text, location, x, y) {
 	} else {			// mode is 'coding'
 		newAnnDiv = $.fromTemplate("newCodingTemplate");
 		title = "New Coding";
-	}
+
+		newAnnDiv.on('submit', function (e) {
+			e.preventDefault();
+			var data = newAnnDiv.find("#newCodeForm").serializeArray();
+			$.post('/code/save', data, function(res) {
+				newAnnDiv.html(res);
+				setTimeout(function() {
+					$dialog.dialog("close");
+					socket.emit('refresh_codes', {room: docid, data: data});
+				}, 2000);
+			});
+		});
+}
 
 	var $dialog = newAnnDiv.dialog({
 		title: title,
