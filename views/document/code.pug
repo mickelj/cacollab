@@ -87,16 +87,28 @@ block control-panel
                 div.panel-group#accordion-codes(role="tablist", aria-multiselectable="true")
                     if crs && crs.coding
                         each v, i in crs.coding
+                            - var count = 0
                             div.panel.panel-default.coding-panel
                                 div.panel-heading(role='tab', id='cheading' + i)
                                     p.panel-title
                                         a(role='button', data-toggle='collapse', data-parent='#accordion-codes', href='#ccollapse' + i, aria-expanded='true', aria-controls='ccollapse' + i)
                                             b #{v.code}&nbsp;
-                                            span.badge(id='badge' + v.code)
+                                            span.badge.pull-right(id='code-badge-' + v.code)
                                 div.panel-collapse.collapse(id='ccollapse' + i, role='tabpanel', aria-labelledby='cheading' + i)
                                     div.panel-body
-                    if codes
-                        - console.log(codes)
+                                        if codes
+                                            ul.list-group(id='code-group-' + v.code)
+                                                each c, n in codes
+                                                    if c.code === v.code
+                                                        - count++;
+                                                        li.codedphrase.list-group-item(data-start=c.tokenStart, data-end=c.tokenEnd)
+                                                            a.btn.btn-primary.coding-jump-button(role='button', href='#t' + c.tokenStart, title='Jump to phrase')
+                                                                span.material-icons redo
+                                                            | &nbsp;&quot;#{c.shorttext}&quot;&nbsp;
+                                                            if c.value
+                                                                span (rank: #{c.value})
+                                        script.
+                                            $('#code-badge-#{v.code}').text(#{count});
 
             div.tab-pane#annotations(role="tab-panel")
                 div.panel-group#accordion-notes(role="tablist", aria-multiselectable="true")
@@ -105,9 +117,10 @@ block control-panel
                             - var ndate = moment(v.updatedAt).format("YYYY-MM-DD HH:mm:ss")
                             div.panel.panel-default.annotation-panel(data-start=v.tokenStart, data-end=v.tokenEnd)
                                 div.panel-heading(role='tab', id='heading' + i)
-                                    a(role='button', href='#t' + v.tokenStart, title='Jump to phrase')
-                                        span.material-icons find_in_page
                                     p.panel-title &nbsp;&nbsp;
+                                        a.btn.btn-primary.notes-jump-button(role='button', href='#t' + v.tokenStart, title='Jump to phrase')
+                                            span.material-icons redo
+
                                         a(role='button', data-toggle='collapse', data-parent='#accordion-notes', href='#collapse' + i, aria-expanded='true', aria-controls='collapse' + i)
                                             span
                                                 b &quot;#{v.shorttext}&quot;
@@ -117,11 +130,26 @@ block control-panel
                 script.
                     $(document).ready(function() {
                         socket.emit('join-room', '#{docid}');
+                        socket.on('draw_codes', function(codes) {
+                            var code = codes[5].value;
+                            var count = parseInt($('#code-badge-' + code).text()) + 1;
+                            $('#code-badge-' + code).text(count);
+                            var newcode = "<li class='codedphrase list-group-item' data-start='" + codes[2].value + "' data-end='" + codes[3].value + "'><a class='btn btn-primary coding-jump-button' role='button' href='#t" + codes[2].value + "' title='Jump to phrase'><span class='material-icons'>redo</span></a>&nbsp;&quot;" + codes[1].value + "&quot;&nbsp;";
+                            if (codes[4].value) {
+                                newcode += "<span>(rank: " + codes[4].value + ")</span>";
+                            }
+                            newcode += "</li>";
+                            var newNode = $(newcode);
+                            newNode.prependTo($('#code-group-' + code)).hide().show('slide', 1000).effect("highlight", 10000);
+                            $('#code-badge-' + code).effect("pulsate", 3000);
+                        });
                         socket.on('draw_notes', function(notes) {
                             var count = parseInt($('#note-badge').text()) + 1;
                             $('#note-badge').text(count);
                             var ndate = moment().format("YYYY-MM-DD HH:mm:ss");
-                            $('#accordion-notes').prepend("<div class='panel panel-default annotation-panel' data-start='" + notes[2].value + "' data-end='" + notes[3].value + "'><div class='panel-heading' role='tab' id='heading" + count + "'><a role='button' href='#t" + notes[2].value + "' title='Jump to phrase'><span class='material-icons'>find_in_page</span></a><p class='panel-title'>&nbsp;&nbsp;<a role='button' data-toggle='collapse' data-parent='#accordion-notes' href='#collapse" + count + "' aria-expanded='true' aria-controls='collapse" + count + "'><span><b>&quot;" + notes[1].value + "&quot;</b><span class='pull-right'>" + ndate + "</span></a></p></div><div class='panel-collapse collapse' id='collapse" + count + "' role='tabpanel' aria-labelledby='heading" + count + "'><div class='panel-body'>" + notes[4].value + "</div></div></div>");
+                            var newNode = $("<div class='panel panel-default annotation-panel' data-start='" + notes[2].value + "' data-end='" + notes[3].value + "'><div class='panel-heading' role='tab' id='heading" + count + "'><p class='panel-title'>&nbsp;&nbsp;<a class='btn btn-primary notes-jump-button' role='button' href='#t" + notes[2].value + "' title='Jump to phrase'><span class='material-icons'>redo</span></a><a role='button' data-toggle='collapse' data-parent='#accordion-notes' href='#collapse" + count + "' aria-expanded='true' aria-controls='collapse" + count + "'><span><b>&quot;" + notes[1].value + "&quot;</b><span class='pull-right'>" + ndate + "</span></a></p></div><div class='panel-collapse collapse' id='collapse" + count + "' role='tabpanel' aria-labelledby='heading" + count + "'><div class='panel-body'>" + notes[4].value + "</div></div></div>");
+                            newNode.prependTo($('#accordion-notes')).hide().show('slide', 1000);
+                            $('#heading' + count).effect("highlight", 10000);
+                            $('#note-badge').effect("pulsate", 3000);
                         });
-                        //socket.emit('refresh_notes', "#{doc._id}");
                     });

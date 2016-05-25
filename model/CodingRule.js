@@ -5,6 +5,6 @@ var codingRuleSchema = mongoose.Schema({
     coding: [mongoose.Schema.Types.Mixed],
     name: String,
     codebook: String
-}) ;
+}, {timestamps: true}) ;
 
 exports.CodingRule = mongoose.model('coding_rule', codingRuleSchema);

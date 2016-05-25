@@ -13,6 +13,11 @@ header, footer {
     line-height: 1.75em;
 }
 
+.text-info {
+    float: right !important;
+    font-size: 18px;
+}
+
 .workspace {
     margin-top: 25px;
     margin-bottom: 25px;
@@ -62,6 +67,20 @@ div[id^="range-field-"] {
 
 .annotation-list textarea {
     resize: none;
+}
+
+.coding-jump-button {
+    padding: 8px 15px;
+    margin: -19px 5px -15px -16px;
+    border-radius: 0px;
+}
+
+.notes-jump-button {
+    padding: 8px 15px;
+    margin: -21px 10px -18px -16px;
+    border-radius: 0px;
+    height: 46px;
+    color: #fff !important;
 }
 
 .highlighted {

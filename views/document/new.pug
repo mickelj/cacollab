@@ -11,7 +11,7 @@ block workspace
                 input#name.form-control(type="text", placeholder="Title of Document", name="name")
         div.form-group
             label.col-sm-3.control-label(for="contrib") Contributors&nbsp;
-                span#contributors-help.glyphicon.glyphicon-info-sign.text-info(data-container="body", data-toggle="popover", data-placement="bottom", data-content="Authors, editors, key subjects", data-trigger="hover")
+                span#contributors-help.material-icons.text-info(data-container="body", data-toggle="popover", data-placement="bottom", data-content="Authors, editors, key subjects", data-trigger="hover") info
                 span.glyphicon.glyphicon-asterisk.text-danger
             div.col-sm-9
                 textarea#contrib.form-control(placeholder="List contributors to document, one per line", name="contrib" rows=5)
@@ -25,7 +25,7 @@ block workspace
                 a.btn.btn-default#uploadButton Upload File
         div.form-group
             label.col-sm-3.control-label(for="groups") Assign to User Group(s)&nbsp;
-                span#usergroup-help.glyphicon.glyphicon-info-sign.text-info(data-container="body", data-toggle="popover", data-placement="bottom", data-content="User groups are sets of users who will have common access to the document (i.e. a course of students, a set of researchers).", data-trigger="hover")
+                span#usergroup-help.material-icons.text-info(data-container="body", data-toggle="popover", data-placement="bottom", data-content="User groups are sets of users who will have common access to the document (i.e. a course of students, a set of researchers).", data-trigger="hover") info
             div.col-sm-6
                 select#usergroups.form-control(name="usergroups", style='width: 100%', multiple='multiple')
                     each v, i in groups
@@ -36,7 +36,7 @@ block workspace
                 a.btn.btn-default Create User Group
         div.form-group
             label.col-sm-3.control-label(for="collections") Part of Collection(s)&nbsp;
-                span#collection-help.glyphicon.glyphicon-info-sign.text-info(data-container="body", data-toggle="popover", data-placement="bottom", data-content="Collections are sets of documents with similar characteristics or coding rules.", data-trigger="hover")
+                span#collection-help.material-icons.text-info(data-container="body", data-toggle="popover", data-placement="bottom", data-content="Collections are sets of documents with similar characteristics or coding rules.", data-trigger="hover") info
             div.col-sm-6
                 select#collections.form-control(name="collections", style='width: 100%', multiple='multiple')
                     each v, i in collections
@@ -47,7 +47,7 @@ block workspace
                 a.btn.btn-default Create Collection
         div.form-group
             label.col-sm-3.control-label(for="coding-rules") Coding Rule Set&nbsp;
-                span#coding-help.glyphicon.glyphicon-info-sign.text-info(data-container="body", data-toggle="popover", data-placement="bottom", data-content="Coding vocabulary with optional quantitative ranges applied.", data-trigger="hover")
+                span#coding-help.material-icons.text-info(data-container="body", data-toggle="popover", data-placement="bottom", data-content="Coding vocabulary with optional quantitative ranges applied.", data-trigger="hover") info
             div.col-sm-6
                 select#codingrules.form-control(name="codingrules", style='width: 100%')
                     each v, i in rules
@@ -58,7 +58,7 @@ block workspace
                 a.btn.btn-default Create Coding Rules
         div.form-group
             label.col-sm-3.control-label(for="coding-rules-fixed") Fixed Coding&nbsp;
-                span#coding-help.glyphicon.glyphicon-info-sign.text-info(data-container="body", data-toggle="popover", data-placement="bottom", data-content="Coding vocabulary with optional quantitative ranges applied.", data-trigger="hover")
+                span#coding-help.material-icons.text-info(data-container="body", data-toggle="popover", data-placement="bottom", data-content="Coding vocabulary with optional quantitative ranges applied.", data-trigger="hover") info
             div.col-sm-6
                 select#codingfixed.form-control(name='codingfixed', style='width: 100%')
                     option(value="true") Fix the coding so that users must adhere to a set vocabulary
@@ -95,9 +95,9 @@ block workspace
                         option(value="full") Users see all coding and annotations
         div.form-group
             label.col-sm-3.control-label(for="metadata") Additional Information&nbsp;
-                span#metadata-help.glyphicon.glyphicon-info-sign.text-info(data-container="body", data-toggle="popover", data-placement="bottom", data-content="Metadata about the document that is helpful in understanding its origins or content.", data-trigger="hover")
+                span#metadata-help.material-icons.text-info(data-container="body", data-toggle="popover", data-placement="bottom", data-content="Metadata about the document that is helpful in understanding its origins or content.", data-trigger="hover") info
             div.col-sm-9
-                table.table.table-condensed.table-hover.table-respon#tab_logic
+                table.table.table-condensed.table-hover.table-responsive#tab_logic
                     tr
                         th.text-center Attribute
                         th.text-center Value
@@ -115,9 +115,9 @@ block workspace
                             input.form-control(type="text", name='val0', placeholder='Value')
                         td.text-center(style="vertical-align: middle; width: 20%;")
                             a#add_row.btn.btn-link
-                                span.glyphicon.glyphicon-plus-sign.text-success
+                                span.material-icons.text-success add
                             a#0.delete-row.btn.btn-link
-                                span.glyphicon.glyphicon-remove-sign.text-danger
+                                span.material-icons.text-danger delete
         div.form-group
             div.col-sm-offset-3.col-sm-9
                 button#addDoc.btn.btn-primary(type="submit") Add Document

@@ -10,9 +10,7 @@ var documentSchema = mongoose.Schema({
     codingset: String,
     codingflex: Boolean,
     title: String,
-    tokens: [String],
-    created: Date,
-    modified: { type: Date, default: Date.now }
-}) ;
+    tokens: [String]
+}, {timestamps: true}) ;
 
 exports.Document = mongoose.model('document', documentSchema);

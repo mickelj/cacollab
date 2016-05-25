@@ -155,9 +155,7 @@ module.exports = function(io) {
             codingset: req.body.codingrules,
             permissions: permissions,
             metadata: metadata,
-            codingfixed: req.body.codingfixed,
-            created: new Date,
-            modified: new Date
+            codingfixed: req.body.codingfixed
         });
 
         newDocument.save(function (err, doc) {

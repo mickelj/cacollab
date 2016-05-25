@@ -75,12 +75,13 @@ $(document).ready(function(){
     });
 
     $('.delete-row').hide();
+
     var i = 1;
     var rows = 1;
     var options = "<option>Date</option><option>Description</option><option>Location</option><option>Source</option><option>Year</option>";
 
     $("#tab_logic").on('click', '#add_row', function(){
-        $('#tab_logic tbody').append("<tr id='md"+i+"'><td style='width: 40%'><select name='att"+i+"' class='form-control input-md' style='width: 100%'>"+options+"</select></td><td style='width: 40%'><input name='val"+i+"' type='text' placeholder='Value' class='form-control input-md'></td><td class='text-center' style='vertical-align: middle; width: 20%;'><a id='add_row' class='btn btn-link'><span class='glyphicon glyphicon-plus-sign text-success'></span></a><a id='"+i+"' class='delete-row btn btn-link'><span class='glyphicon glyphicon-remove-sign text-danger'></span></a></td></tr>");
+        $('#tab_logic tbody').append("<tr id='md"+i+"'><td style='width: 40%'><select name='att"+i+"' class='form-control input-md' style='width: 100%'>"+options+"</select></td><td style='width: 40%'><input name='val"+i+"' type='text' placeholder='Value' class='form-control input-md'></td><td class='text-center' style='vertical-align: middle; width: 20%;'><a id='add_row' class='btn btn-link'><span class='material-icons text-success'>add</span></a><a id='"+i+"' class='delete-row btn btn-link'><span class='material-icons text-danger'>delete</span></a></td></tr>");
         i++;
         rows++;
         $('.delete-row').show();
@@ -111,22 +112,28 @@ $(document).ready(function(){
     $('#contributors-help').popover();
     $('#coding-help').popover();
 
-    $('div[id^="accordion-"]').on( "mouseenter", ".annotation-panel", function() {
-            var start = $(this).data('start');
-            var end = $(this).data('end');
-            $('#t' + start).addClass('highlighted-start');
-            for (var i = start; i <= end; i++) {
-                $('#t' + i).addClass('highlighted');
-            }
-            $('#t' + end).addClass('highlighted-end');
-    });
-    $('div[id^="accordion-"]').on( "mouseleave", ".annotation-panel", function() {
-            var start = $(this).data('start');
-            var end = $(this).data('end');
-            $('#t' + start).removeClass('highlighted-start');
-            for (var i = start; i <= end; i++) {
-                $('#t' + i).removeClass('highlighted');
-            }
-            $('#t' + end).removeClass('highlighted-end');
-    });
+    var highlightOn = function() {
+        var start = $(this).data('start');
+        var end = $(this).data('end');
+        $('#t' + start).addClass('highlighted-start');
+        for (var i = start; i <= end; i++) {
+            $('#t' + i).addClass('highlighted');
+        }
+        $('#t' + end).addClass('highlighted-end');
+    }
+
+    var highlightOff = function() {
+        var start = $(this).data('start');
+        var end = $(this).data('end');
+        $('#t' + start).removeClass('highlighted-start');
+        for (var i = start; i <= end; i++) {
+            $('#t' + i).removeClass('highlighted');
+        }
+        $('#t' + end).removeClass('highlighted-end');
+    }
+
+    $('div[id^="accordion-"]').on( "mouseenter", ".annotation-panel", highlightOn );
+    $('div[id^="accordion-"]').on( "mouseleave", ".annotation-panel", highlightOff );
+    $('div.panel-body').on( "mouseenter", ".codedphrase", highlightOn );
+    $('div.panel-body').on( "mouseleave", ".codedphrase", highlightOff );
 });
