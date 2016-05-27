@@ -14,17 +14,17 @@ module.exports = function(io) {
     var getFieldValues = new Promise(function(resolve, reject) {
         async.parallel({
             collections: function(cb) {
-                Collection.find( { owner: "57336169be1fd8064771ab91" }, null, { sort: {name: 1}}, function (err, colls) {
+                Collection.find( {  }, null, { sort: {name: 1}}, function (err, colls) {
                     cb(null, colls);
                 });
             },
             groups: function(cb) {
-                Group.find( { owner: "57336169be1fd8064771ab91" }, null, { sort: {name: 1}}, function (err, grps) {
+                Group.find( {  }, null, { sort: {name: 1}}, function (err, grps) {
                     cb(null, grps);
                 });
             },
             rules: function(cb) {
-                CodingRule.find( { "owner": "57336169be1fd8064771ab91" }, null, { sort: {name: 1}}, function (err, crs) {
+                CodingRule.find( {  }, null, { sort: {name: 1}}, function (err, crs) {
                     cb(null, crs);
                 });
             }
