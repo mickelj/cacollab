@@ -18,12 +18,16 @@ header, footer {
     font-size: 18px;
 }
 
+.modal-footer .btn + .btn {
+    margin-left: 50%;
+}
+
 .workspace {
     margin-top: 25px;
     margin-bottom: 25px;
 }
 
-a.btn-default {
+button.btn-default {
     width: 100%;
 }
 

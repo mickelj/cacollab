@@ -6,6 +6,10 @@ $(window).on("resize load", function() {
 });
 
 $(document).ready(function(){
+    String.prototype.toUpperFirst = function() {
+        return this.charAt(0).toUpperCase() + this.slice(1);
+    }
+
     function resetCodeSliders() {
         $("div[id^='range-field-']").hide();
         $("input[id^='range-input-']").val(0);
@@ -70,41 +74,57 @@ $(document).ready(function(){
     $('select#usergroups').select2();
     $('select#coding-rules').select2();
 
+
     $('select.input-md').on('select2:open', function() {
         $('.select2-container--open .select2-search__field').attr('placeholder', 'Type your own field name here');
     });
 
-    $('.delete-row').hide();
+    $('#tab_logic .delete-row').hide();
 
-    var i = 1;
-    var rows = 1;
-    var options = "<option>Date</option><option>Description</option><option>Location</option><option>Source</option><option>Year</option>";
+    function EditableTable(el, newRow) {
+        this.el = el;
+        this.newRow = newRow;
+        this.rows = 1;
+        this.i = 1;
+    }
 
-    $("#tab_logic").on('click', '#add_row', function(){
-        $('#tab_logic tbody').append("<tr id='md"+i+"'><td style='width: 40%'><select name='att"+i+"' class='form-control input-md' style='width: 100%'>"+options+"</select></td><td style='width: 40%'><input name='val"+i+"' type='text' placeholder='Value' class='form-control input-md'></td><td class='text-center' style='vertical-align: middle; width: 20%;'><a id='add_row' class='btn btn-link'><span class='material-icons text-success'>add</span></a><a id='"+i+"' class='delete-row btn btn-link'><span class='material-icons text-danger'>delete</span></a></td></tr>");
-        i++;
-        rows++;
-        $('.delete-row').show();
-        $('select.input-md').select2({
-            tags: true
-        });
+    EditableTable.prototype = {
+        addRow: function() {
+            var html = this.newRow.replace(/CNT/g, this.i)
+            $(this.el + ' tbody').append(html);
+            this.i++;
+            this.rows++;
+            $(this.el + ' .delete-row').show();
+            $(this.el + ' select.input-md').select2({
+                tags: true
+            });
 
-        $('select.input-md').on('select2:open', function() {
-            $('.select2-container--open .select2-search__field').attr('placeholder', 'Type your own field name here');
-        });
-    });
-
-    $("#tab_logic").on('click', '.delete-row', function() {
-        var id = $(this).attr('id');
-		$("#md"+id).html('');
-        rows--;
-        if (rows < 2) {
-            $('.delete-row').hide();
-        } else {
-            $('.delete-row').show();
+            $(this.el + ' select.input-md').on('select2:open', function() {
+                $('.select2-container--open .select2-search__field').attr('placeholder', 'Type in your own field name here.');
+            });
+        },
+        deleteRow: function (id) {
+            $(this.el + " #md"+id).html('');
+            this.rows--;
+            if (this.rows < 2) {
+                $(this.el + ' .delete-row').hide();
+            } else {
+                $(this.el + ' .delete-row').show();
+            }
         }
-	});
+    }
 
+    var options = "<option></option><option>Date</option><option>Description</option><option>Location</option><option>Source</option><option>Year</option>";
+
+    var tablogichtml = "<tr id='mdCNT'><td style='width: 40%'><select name='attCNT' class='form-control input-md' style='width: 100%'>"+options+"</select></td><td style='width: 40%'><input name='valCNT' type='text' placeholder='Value' class='form-control input-md'></td><td class='text-center' style='vertical-align: middle; width: 20%;'><a id='add_row' class='btn btn-link'><span class='material-icons text-success'>add</span></a><a id='CNT' class='delete-row btn btn-link'><span class='material-icons text-danger'>delete</span></a></td></tr>";
+    var tablogic = new EditableTable("#tab_logic", tablogichtml);
+
+    $("#tab_logic").on('click', '#add_row', function() {
+        tablogic.addRow();
+    });
+    $("#tab_logic").on('click', '.delete-row', function() {
+        tablogic.deleteRow($(this).attr('id'));
+    });
 
     $('#collection-help').popover();
     $('#usergroup-help').popover();
@@ -136,4 +156,31 @@ $(document).ready(function(){
     $('div[id^="accordion-"]').on( "mouseleave", ".annotation-panel", highlightOff );
     $('div.panel-body').on( "mouseenter", ".codedphrase", highlightOn );
     $('div.panel-body').on( "mouseleave", ".codedphrase", highlightOff );
+
+    $('form#formAddDoc').on( "click", "button.addUnit", function() {
+        $("#addUnit").html();
+        var url = "/" + $(this).data('modaltype') + '/new';
+        $("#addUnit").load(url, function() {
+            $('#tab_codes .delete-row').hide();
+
+            var tabcodeshtml = "<tr id='mdCNT'><td style='width: 40%'><input class='form-control' type='text' name='codeCNT' placeholder='Code'></td><td style='width: 20%'><input name='minCNT' type='text' placeholder='Min Value' class='form-control input-md'></td><td style='width: 20%'><input name='maxCNT' type='text' placeholder='Max Value' class='form-control input-md'></td><td class='text-center' style='vertical-align: middle; width: 20%;'><a id='add_row' class='btn btn-link'><span class='material-icons text-success'>add</span></a><a id='CNT' class='delete-row btn btn-link'><span class='material-icons text-danger'>delete</span></a></td></tr>";
+            var tabcodes = new EditableTable("#tab_codes", tabcodeshtml);
+
+            $('select#users').select2();
+            $("#tab_codes").on('click', '#add_row', function() {
+                tabcodes.addRow();
+            });
+            $("#tab_codes").on('click', '.delete-row', function() {
+                tabcodes.deleteRow($(this).attr('id'));
+            });
+
+            $("#addUnit").on('keyup', '#name', function() {
+                if ($(this).val().length > 0) {
+                    $("button#saveNewUnit").prop("disabled", false);
+                } else {
+                    $("button#saveNewUnit").prop("disabled", true);
+                }
+            });
+        });
+    });
 });

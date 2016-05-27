@@ -13,4 +13,4 @@ var noteSchema = mongoose.Schema({
     notes: [singleNoteSchema]
 });
 
-exports.Annotation = mongoose.model('annotation', noteSchema);
+module.exports = mongoose.model('annotation', noteSchema);

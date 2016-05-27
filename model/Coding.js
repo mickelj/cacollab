@@ -14,4 +14,4 @@ var codingSchema = mongoose.Schema({
     codes: [singleCodeSchema]
 });
 
-exports.Coding = mongoose.model('coding', codingSchema);
+module.exports = mongoose.model('coding', codingSchema);

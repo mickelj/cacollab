@@ -1,56 +1,60 @@
-div.modal.fade#addUnit(tabindex="-1", role="dialog", aria-labelledby="addUnitLabel")
-    div.modal-dialog(role="document")
-        div.modal-content
-            div.modal-header
-                button.close(type="button", data-dismiss="modal", aria-label="Close")
-                    span(aria-hidden="true") &times;
-                h4.modal-title#addUnitLabel New #{modaltype-proper}
-            div.modal-body
-                form
-                    div.form-group
-                        label.col-sm-3.control-label(for="recipient-name") Name:
-                            span.glyphicon.glyphicon-asterisk.text-danger
-                        div.col-sm-9
-                            input.form-control#name(type="text")
-                    case modaltype
-                        when "usergroup"
-                            div.form-group
-                                label.col-sm-3.control-label(for="members") Group Members:
-                                div.col-sm-9
-                                    select#users.form-control(name="users", style='width: 100%', multiple='multiple')
+div.modal-dialog.modal-lg(role="document")
+    div.modal-content
+        div.modal-header
+            button.close(type="button", data-dismiss="modal", aria-label="Close")
+                span(aria-hidden="true") &times;
+            h4.modal-title#addUnitLabel New #{modaltype}
+        div.modal-body
+            form(data-toggle="validator")
+                div.form-group.row
+                    label.col-sm-3.control-label(for="name") Name
+                        span.glyphicon.glyphicon-asterisk.text-danger
+                    div.col-sm-9
+                        input.form-control#name(type="text", required)
+                case modaltype
+                    when "usergroup"
+                        div.form-group.row
+                            label.col-sm-3.control-label(for="members") Add Group Members:
+                                span.glyphicon.glyphicon-asterisk.text-danger
+                            div.col-sm-9
+                                select#users.form-control(name="users", style='width: 100%', multiple='multiple', required)
+                                    if users
                                         each v, i in users
                                             - var id = v._id.toString()
                                             option(value=id)= v.name
-                        when "codingrule"
-                            div.form-group
-                                label.col-sm-3.control-label(for="coding") Codes
-                                    span.glyphicon.glyphicon-asterisk.text-danger
-                                div.col-sm-9
-                                    table.table.table-condensed.table-hover.table-responsive#tab_logic
-                                        tr
-                                            th.text-center Code Label
-                                            th.text-center Min Value
-                                            th.text-center Max Value
-                                            th
-                                        tr#md0
-                                            td(style='width: 40%')
-                                                input.form-control(type="text", name='code0', placeholder='Code')
-                                            td(style='width: 20%')
-                                                input.form-control(type="text", name='min0', placeholder='Min Value')
-                                            td(style='width: 20%')
-                                                input.form-control(type="text", name='max0', placeholder='Max Value')
-                                            td.text-center(style="vertical-align: middle; width: 20%;")
-                                                a#add_row.btn.btn-link
-                                                    span.material-icons.text-success add_box
-                                                a#0.delete-row.btn.btn-link
-                                                    span.material-icons.text-danger delete
-                            div.form-group
-                                label.col-sm-3.control-label(for="docText") Codebook
-                                div.col-sm-9
-                                    textarea#codebook.form-control(name="codebook",rows=10, placeholder="Paste text of codebook here")
+                    when "codingrule"
+                        div.form-group.row
+                            label.col-sm-3.control-label(for="coding") Add Codes
+                            div.col-sm-9
+                                table.table.table-condensed.table-hover.table-responsive#tab_codes
+                                    tr
+                                        th.text-center Code Label
+                                        th.text-center Min Value
+                                        th.text-center Max Value
+                                        th
+                                    tr#md0
+                                        td(style='width: 40%')
+                                            input.form-control(type="text", name='code0', placeholder='Code')
+                                        td(style='width: 20%')
+                                            input.form-control(type="text", name='min0', placeholder='Min Value')
+                                        td(style='width: 20%')
+                                            input.form-control(type="text", name='max0', placeholder='Max Value')
+                                        td.text-center(style="vertical-align: middle; width: 20%;")
+                                            a#add_row.btn.btn-link
+                                                span.material-icons.text-success add
+                                            a#0.delete-row.btn.btn-link
+                                                span.material-icons.text-danger delete
+                        div.form-group.row
+                            label.col-sm-3.control-label(for="docText") Codebook
+                            div.col-sm-9
+                                textarea#codebook.form-control(name="codebook",rows=10, placeholder="Paste text of codebook here")
 
 
 
-            div.modal-footer
-                button.btn.btn-default(type="button", data-dismiss="modal") Close
-                button.btn.btn-primary(type="button") Send message
+        div.modal-footer
+            button#closeUnit.btn.btn-sm.btn-danger.col-xs-3(type="button", data-dismiss="modal")
+                span.material-icons cancel
+                |  Cancel
+            button#saveNewUnit.btn.btn-sm.btn-success.col-xs-3.col-xs-offset-6(type="submit", disabled)
+                span.material-icons check_circle
+                |  Save

@@ -1,8 +1,8 @@
 var express = require('express');
 var router = express.Router();
-var Coding = require('../model/Coding').Coding;
-var CodingRule = require('../model/CodingRule').CodingRule;
-var Document = require('../model/Document').Document;
+var Coding = require('../model/Coding');
+var CodingRule = require('../model/CodingRule');
+var Document = require('../model/Document');
 
 router.get('/:id', function(req, res) {
     Coding.findOne({"document": req.params.id }, null, function(err, doc) {

@@ -1,6 +1,6 @@
 var express = require('express');
 var router = express.Router();
-var Annotation = require('../model/Annotation').Annotation;
+var Annotation = require('../model/Annotation');
 
 router.get('/:id', function(req, res) {
     Annotation.findOne({"document": req.params.id }, null, function(err, doc) {

@@ -8,6 +8,9 @@ var routes = require('./routes/index');
 var users = require('./routes/users');
 var notes = require('./routes/notes');
 var codes = require('./routes/codes');
+var collections = require('./routes/collections');
+var usergroups = require('./routes/usergroups');
+var codingrules = require('./routes/codingrules');
 var db = require('./utils/dbmodel');
 
 var app = express();
@@ -55,6 +58,9 @@ app.use('/users', users);
 app.use('/document', docs);
 app.use('/note', notes);
 app.use('/code', codes);
+app.use('/collection', collections);
+app.use('/usergroup', usergroups);
+app.use('/codingrule', codingrules);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

@@ -1,12 +1,12 @@
 module.exports = function(io) {
     var express = require('express');
     var router = express.Router();
-    var Annotation = require('../model/Annotation').Annotation;
-    var Coding = require('../model/Coding').Coding;
-    var CodingRule = require('../model/CodingRule').CodingRule;
-    var Document = require('../model/Document').Document;
-    var Collection = require('../model/Collection').Collection;
-    var Group = require('../model/Group').Group;
+    var Annotation = require('../model/Annotation');
+    var Coding = require('../model/Coding');
+    var CodingRule = require('../model/CodingRule');
+    var Document = require('../model/Document');
+    var Collection = require('../model/Collection');
+    var Group = require('../model/Group');
     var tok = require('../utils/createTokens');
     var js2xmlparser = require("js2xmlparser");
     var async = require("async");
@@ -46,19 +46,9 @@ module.exports = function(io) {
 
         async.parallel({
             doc: function(cb1) {
-                async.waterfall([
-                    function(cb2) {
-                        Document.findById(id, function (err, doc) {
-                            cb2(null, doc);
-                        });
-                    },
-                    function(doc, cb3) {
-                        CodingRule.findById( doc.codingset, function (err, crs) {
-                            cb3(null, {doc: doc, crs: crs});
-                        });
-                    }], function (err, result) {
-                        cb1(null, result);
-                    });
+                Document.findById(id).populate('codingset').exec(function(err, doc) {
+                    cb1(null, doc);
+                });
             },
             codes: function(cb4) {
                 Coding.findOne({"document": id }, null, function(err, codes) {
@@ -80,7 +70,7 @@ module.exports = function(io) {
             }
         }, function(err, results) {
             if (err) res.send(err);
-            res.render('document/code', { title: results.doc.doc.title, doc: results.doc.doc, crs: results.doc.crs,  codes: results.codes, notes: results.notes.sort(function(a, b) { return b.updatedAt.toString().localeCompare(a.updatedAt.toString()); }) });
+            res.render('document/code', { title: results.doc.title, doc: results.doc, crs: results.doc.codingset,  codes: results.codes, notes: results.notes.sort(function(a, b) { return b.updatedAt.toString().localeCompare(a.updatedAt.toString()); }) });
         });
     });
 

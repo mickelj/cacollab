@@ -5,4 +5,4 @@ var collectionSchema = mongoose.Schema({
     name: String,
 }, {timestamps: true}) ;
 
-exports.Collection = mongoose.model('collection', collectionSchema);
+module.exports = mongoose.model('collection', collectionSchema);

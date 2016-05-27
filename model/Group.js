@@ -6,4 +6,4 @@ var groupSchema = mongoose.Schema({
     members: [String]
 }, {timestamps: true}) ;
 
-exports.Group = mongoose.model('group', groupSchema);
+module.exports = mongoose.model('group', groupSchema);

@@ -7,4 +7,4 @@ var codingRuleSchema = mongoose.Schema({
     codebook: String
 }, {timestamps: true}) ;
 
-exports.CodingRule = mongoose.model('coding_rule', codingRuleSchema);
+module.exports = mongoose.model('coding_rule', codingRuleSchema);

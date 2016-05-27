@@ -3,23 +3,23 @@ extends ../layout.pug
 block workspace
     h1= title
         small.text-danger &nbsp; (#[span.glyphicon.glyphicon-asterisk.text-danger] required)
-    form#formAddDoc.form-horizontal(method="post", action="/document/new")
+    form#formAddDoc.form-horizontal(method="post", action="/document/new", data-toggle="validator")
         div.form-group
             label.col-sm-3.control-label(for="name") Title
                 span.glyphicon.glyphicon-asterisk.text-danger
             div.col-sm-9
-                input#name.form-control(type="text", placeholder="Title of Document", name="name")
+                input#name.form-control(type="text", placeholder="Title of Document", name="name", required)
         div.form-group
             label.col-sm-3.control-label(for="contrib") Contributors&nbsp;
                 span#contributors-help.material-icons.text-info(data-container="body", data-toggle="popover", data-placement="bottom", data-content="Authors, editors, key subjects", data-trigger="hover") info
                 span.glyphicon.glyphicon-asterisk.text-danger
             div.col-sm-9
-                textarea#contrib.form-control(placeholder="List contributors to document, one per line", name="contrib" rows=5)
+                textarea#contrib.form-control(placeholder="List contributors to document, one per line", name="contrib", rows=5, required)
         div.form-group
             label.col-sm-3.control-label(for="docText") Text of Document
                 span.glyphicon.glyphicon-asterisk.text-danger
             div.col-sm-6
-                textarea#docText.form-control(name="docText",rows=10, placeholder="Paste text of document here")
+                textarea#docText.form-control(name="docText",rows=10, placeholder="Paste text of document here", required)
             div.col-sm-1.text-center OR
             div.col-sm-2
                 a.btn.btn-default#uploadButton Upload File
@@ -33,7 +33,7 @@ block workspace
                         option(value=id)= v.name
             div.col-sm-1.text-center OR
             div.col-sm-2
-                a.btn.btn-default Create User Group
+                button.btn.btn-default.addUnit(type="button", data-toggle="modal", data-target="#addUnit", data-modaltype="usergroup") Create User Group
         div.form-group
             label.col-sm-3.control-label(for="collections") Part of Collection(s)&nbsp;
                 span#collection-help.material-icons.text-info(data-container="body", data-toggle="popover", data-placement="bottom", data-content="Collections are sets of documents with similar characteristics or coding rules.", data-trigger="hover") info
@@ -44,18 +44,19 @@ block workspace
                         option(value=id)= v.name
             div.col-sm-1.text-center OR
             div.col-sm-2
-                a.btn.btn-default Create Collection
+                button.btn.btn-default.addUnit(type="button", data-toggle="modal", data-target="#addUnit", data-modaltype="collection") Create Collection
         div.form-group
             label.col-sm-3.control-label(for="coding-rules") Coding Rule Set&nbsp;
                 span#coding-help.material-icons.text-info(data-container="body", data-toggle="popover", data-placement="bottom", data-content="Coding vocabulary with optional quantitative ranges applied.", data-trigger="hover") info
             div.col-sm-6
                 select#codingrules.form-control(name="codingrules", style='width: 100%')
+                    option(value="", disabled, selected)
                     each v, i in rules
                         - var id = v._id.toString()
                         option(value=id)= v.name
             div.col-sm-1.text-center OR
             div.col-sm-2
-                a.btn.btn-default Create Coding Rules
+                button.btn.btn-default.addUnit(type="button", data-toggle="modal", data-target="#addUnit", data-modaltype="codingrule") Create Coding Rules
         div.form-group
             label.col-sm-3.control-label(for="coding-rules-fixed") Fixed Coding&nbsp;
                 span#coding-help.material-icons.text-info(data-container="body", data-toggle="popover", data-placement="bottom", data-content="Coding vocabulary with optional quantitative ranges applied.", data-trigger="hover") info
@@ -121,3 +122,5 @@ block workspace
         div.form-group
             div.col-sm-offset-3.col-sm-9
                 button#addDoc.btn.btn-primary(type="submit") Add Document
+
+    div.modal.fade#addUnit(tabindex="-1", role="dialog", aria-labelledby="addUnitLabel")

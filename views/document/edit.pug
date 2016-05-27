@@ -3,26 +3,26 @@ extends ../layout.pug
 block workspace
     h1= title
         small.text-danger &nbsp; (#[span.glyphicon.glyphicon-asterisk.text-danger] required)
-    form#formAddDoc.form-horizontal(method="post", action="/document/" + doc._id + "/edit")
+    form#formAddDoc.form-horizontal(method="post", action="/document/" + doc._id + "/edit", data-toggle="validator")
         div.form-group
             label.col-sm-3.control-label(for="name") Title
                 span.glyphicon.glyphicon-asterisk.text-danger
             div.col-sm-9
-                input#name.form-control(type="text", placeholder="Title of Document", name="name", value=doc.title)
+                input#name.form-control(type="text", placeholder="Title of Document", name="name", value=doc.title, required)
         div.form-group
             label.col-sm-3.control-label(for="contrib") Contributors&nbsp;
                 span#contributors-help.glyphicon.glyphicon-info-sign.text-info(data-container="body", data-toggle="popover", data-placement="bottom", data-content="Authors, editors, key subjects", data-trigger="hover")
                 span.glyphicon.glyphicon-asterisk.text-danger
             div.col-sm-9
-                textarea#contrib.form-control(placeholder="List contributors to document, one per line", name="contrib", rows="5")= doc.contributors
+                textarea#contrib.form-control(placeholder="List contributors to document, one per line", name="contrib", rows="5", required)= doc.contributors
         div.form-group
             label.col-sm-3.control-label(for="docText") Text of Document
                 span.glyphicon.glyphicon-asterisk.text-danger
-            div.col-sm-6
-                textarea#docText.form-control(name="docText",rows=10, placeholder="Paste text of document here")= doc.tokens
-            div.col-sm-1.text-center OR
-            div.col-sm-2
-                a.btn.btn-default#uploadButton Upload File
+            div.col-sm-9
+                textarea#docText.form-control(name="docText",rows=10, placeholder="Paste text of document here", disabled, required)
+                    each val, index in doc.tokens
+                        = val
+
         div.form-group
             label.col-sm-3.control-label(for="groups") Assign to User Group(s)&nbsp;
                 span#usergroup-help.glyphicon.glyphicon-info-sign.text-info(data-container="body", data-toggle="popover", data-placement="bottom", data-content="User groups are sets of users who will have common access to the document (i.e. a course of students, a set of researchers).", data-trigger="hover")
@@ -36,7 +36,7 @@ block workspace
                             option(value=id)= v.name
             div.col-sm-1.text-center OR
             div.col-sm-2
-                a.btn.btn-default Create User Group
+                button.btn.btn-default.addUnit(type="button", data-toggle="modal", data-target="#addUnit", data-modaltype="usergroup") Create User Group
         div.form-group
             label.col-sm-3.control-label(for="collections") Part of Collection(s)&nbsp;
                 span#collection-help.glyphicon.glyphicon-info-sign.text-info(data-container="body", data-toggle="popover", data-placement="bottom", data-content="Collections are sets of documents with similar characteristics or coding rules.", data-trigger="hover")
@@ -45,7 +45,6 @@ block workspace
                     script.
                         var vals = "#{doc.collections}".replace(',','","')
                         vals = '["' + vals + '"]';
-                        alert(vals)
                         $(document).ready(function() {
                             $("select#collections").val(vals).trigger("change");
                         })
@@ -54,7 +53,7 @@ block workspace
                         option(value=id)= v.name
             div.col-sm-1.text-center OR
             div.col-sm-2
-                a.btn.btn-default Create Collection
+                button.btn.btn-default.addUnit(type="button", data-toggle="modal", data-target="#addUnit", data-modaltype="collection") Create Collection
         div.form-group
             label.col-sm-3.control-label(for="coding-rules") Coding Rule Set&nbsp;
                 span#coding-help.glyphicon.glyphicon-info-sign.text-info(data-container="body", data-toggle="popover", data-placement="bottom", data-content="Coding vocabulary with optional quantitative ranges applied.", data-trigger="hover")
@@ -65,7 +64,7 @@ block workspace
                         option(value=id)= v.name
             div.col-sm-1.text-center OR
             div.col-sm-2
-                a.btn.btn-default Create Coding Rules
+                button.btn.btn-default.addUnit(type="button", data-toggle="modal", data-target="#addUnit", data-modaltype="codingrule") Create Coding Rules
         div.form-group
             label.col-sm-3.control-label(for="coding-rules-fixed") Fixed Coding&nbsp;
                 span#coding-help.glyphicon.glyphicon-info-sign.text-info(data-container="body", data-toggle="popover", data-placement="bottom", data-content="Coding vocabulary with optional quantitative ranges applied.", data-trigger="hover")
@@ -125,9 +124,11 @@ block workspace
                             input.form-control(type="text", name='val0', placeholder='Value')
                         td.text-center(style="vertical-align: middle; width: 20%;")
                             a#add_row.btn.btn-link
-                                span.glyphicon.glyphicon-plus-sign.text-success
+                                span.material-icons.text-success add
                             a#0.delete-row.btn.btn-link
-                                span.glyphicon.glyphicon-remove-sign.text-danger
+                                span.material-icons.text-danger delete
         div.form-group
             div.col-sm-offset-3.col-sm-9
-                button#addDoc.btn.btn-primary(type="submit") Add Document
+                button#addDoc.btn.btn-primary(type="submit") Update Document
+
+    div.modal.fade#addUnit(tabindex="-1", role="dialog", aria-labelledby="addUnitLabel")
