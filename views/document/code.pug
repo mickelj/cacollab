@@ -52,7 +52,7 @@ block workspace
                     input#shorttext(type="hidden", name="shorttext")
                     input#tokenStart(type="hidden", name="tokenStart")
                     input#tokenEnd(type="hidden", name="tokenEnd")
-                    textarea#note.form-control(name='note')
+                    textarea#note(name='note', data-provide='markdown', data-hidden-buttons='cmdCode', data-fullscreen='false')
             div.panel-footer
                 button#closeNewAnn.btn.btn-sm.btn-danger.col-xs-3
                     i.material-icons cancel

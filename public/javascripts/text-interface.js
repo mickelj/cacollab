@@ -269,12 +269,12 @@ function prepareInterface() {
 
 
 function hideBanner() {
-	var path = $("#path").val();
-	$.ajax({
-		url: path + "ajax/hidebanner",
-		type: "get"
-	});
-	$("#banner").remove();
+	// var path = $("#path").val();
+	// $.ajax({
+	// 	url: path + "ajax/hidebanner",
+	// 	type: "get"
+	// });
+	// $("#banner").remove();
 }
 
 function enlargeText() {
@@ -1071,7 +1071,8 @@ function openNewAnnotation(text, location, x, y) {
 	newAnnDiv.find("#notetext").text('"' + text.brief() + '"');
 	newAnnDiv.find("#shorttext").val(text.brief());
 
-	newAnnDiv.find("#closeNewAnn").click(function () {
+	newAnnDiv.find("#closeNewAnn").click(function (e) {
+		e.preventDefault();
 		$dialog.dialog( "close" );
 	});
 

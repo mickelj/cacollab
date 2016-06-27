@@ -28,7 +28,7 @@ header, footer {
 }
 
 button.btn-default {
-    width: 100%;
+    /*width: 100%;*/
 }
 
 .workspace span[id^=t]:hover {
@@ -74,13 +74,13 @@ div[id^="range-field-"] {
 }
 
 .coding-jump-button {
-    padding: 8px 15px;
+    padding: 9px;
     margin: -19px 5px -15px -16px;
     border-radius: 0px;
 }
 
 .notes-jump-button {
-    padding: 8px 15px;
+    padding: 9px;
     margin: -21px 10px -18px -16px;
     border-radius: 0px;
     height: 46px;
@@ -130,6 +130,14 @@ div[id^="range-field-"] {
 
 #notetext {
     letter-spacing: .25px;
+}
+
+.md-editor {
+    margin: 10px -25px;
+}
+
+.md-editor>textarea {
+    padding: 10px;
 }
 
 a#add_row:hover, a.delete-row:hover {

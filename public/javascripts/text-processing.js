@@ -49,14 +49,14 @@ function prepareEverything(userId, textId, sectionNum, perm, firstAnn, appRoot, 
 }
 
 function doSaveColourLabels(data) {
-	$.ajax({
-		url: "ajax/savecolours",
-		type: "post",
-		data: data,
-		dataType: "json",
-		error: handleError,
-		success: handleStandardResponse
-	});
+// 	$.ajax({
+// 		url: "ajax/savecolours",
+// 		type: "post",
+// 		data: data,
+// 		dataType: "json",
+// 		error: handleError,
+// 		success: handleStandardResponse
+// 	});
 }
 
 function isHidden(annId) {
@@ -89,69 +89,69 @@ function doSaveNewAnnotation(data, posX, posY) {
 }
 
 function doSaveComment(data) {
-	$.ajax({
-		url: "ajax/savecomment",
-		type: "post",
-		data: data,
-		dataType: "json",
-		error: handleError,
-		success: handleStandardResponse
-	});
+// 	$.ajax({
+// 		url: "ajax/savecomment",
+// 		type: "post",
+// 		data: data,
+// 		dataType: "json",
+// 		error: handleError,
+// 		success: handleStandardResponse
+// 	});
 }
 
 function doSaveTags(data) {
-	$.ajax({
-		url: "ajax/savetags",
-		type: "post",
-		data: data,
-		dataType: "json",
-		error: handleError,
-		success: handleStandardResponse
-	});
+	// $.ajax({
+	// 	url: "ajax/savetags",
+	// 	type: "post",
+	// 	data: data,
+	// 	dataType: "json",
+	// 	error: handleError,
+	// 	success: handleStandardResponse
+	// });
 }
 
 function doDeleteAnnotation(annId) {
-	$.ajax({
-		url: "ajax/removeannotation",
-		type: "post",
-		data: "annId=" + annId,
-		dataType: "json",
-		error: handleError,
-		success: handleStandardResponse
-	});
+// 	$.ajax({
+// 		url: "ajax/removeannotation",
+// 		type: "post",
+// 		data: "annId=" + annId,
+// 		dataType: "json",
+// 		error: handleError,
+// 		success: handleStandardResponse
+// 	});
 }
 
 function doDeleteComment(comId) {
-	$.ajax({
-		url: "ajax/removecomment",
-		type: "post",
-		data: "comId=" + comId,
-		dataType: "json",
-		error: handleError,
-		success: handleStandardResponse
-	});
+// 	$.ajax({
+// 		url: "ajax/removecomment",
+// 		type: "post",
+// 		data: "comId=" + comId,
+// 		dataType: "json",
+// 		error: handleError,
+// 		success: handleStandardResponse
+// 	});
 }
 
 function doDeleteTag(annId, tag) {
-	$.ajax({
-		url: "ajax/removetag",
-		type: "post",
-		data: "annId=" + annId + "&tag=" + encodeURIComponent(tag),
-		dataType: "json",
-		error: handleError,
-		success: handleStandardResponse
-	});
+// 	$.ajax({
+// 		url: "ajax/removetag",
+// 		type: "post",
+// 		data: "annId=" + annId + "&tag=" + encodeURIComponent(tag),
+// 		dataType: "json",
+// 		error: handleError,
+// 		success: handleStandardResponse
+// 	});
 }
 
 function doChangeColour(annId, colour) {
-	$.ajax({
-		url: "ajax/changecolour",
-		type: "post",
-		data: "annId=" + annId + "&colour=" + colour,
-		dataType: "json",
-		error: handleError,
-		success: handleStandardResponse
-	});
+// 	$.ajax({
+// 		url: "ajax/changecolour",
+// 		type: "post",
+// 		data: "annId=" + annId + "&colour=" + colour,
+// 		dataType: "json",
+// 		error: handleError,
+// 		success: handleStandardResponse
+// 	});
 }
 
 function handleError(xhr, textStatus, error) {
@@ -183,24 +183,24 @@ function updateNow() {
 }
 
 function performUpdate() {
-	if (!updating) {
-		updating = true;
-		setLastUpdated("Updating");
-
-		if (updateTimeout != null) {
-			clearTimeout(updateTimeout);
-			updateTimeout = null;
-		}
-
-		$.ajax({
-			url: "ajax/update",
-			type: "post",
-			data: "t=" + lastUpdate + "&textId=" + textId + "&sectionNum=" + sectionNumber,
-			dataType: "json",
-			error: handleUpdateError,
-			success: handleUpdate
-		});
-	}
+// 	if (!updating) {
+// 		updating = true;
+// 		setLastUpdated("Updating");
+//
+// 		if (updateTimeout != null) {
+// 			clearTimeout(updateTimeout);
+// 			updateTimeout = null;
+// 		}
+//
+// 		$.ajax({
+// 			url: "ajax/update",
+// 			type: "post",
+// 			data: "t=" + lastUpdate + "&textId=" + textId + "&sectionNum=" + sectionNumber,
+// 			dataType: "json",
+// 			error: handleUpdateError,
+// 			success: handleUpdate
+// 		});
+// 	}
 }
 
 function handleUpdate(data) {
