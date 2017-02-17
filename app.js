@@ -101,5 +101,5 @@ db.connect('mongodb://localhost:27017/cacollab', function(err) {
   }
 });
 
-/* Export stuff */
+/* Export stuff to the world */
 module.exports = {app: app, server: server};
