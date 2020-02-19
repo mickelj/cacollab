@@ -17,7 +17,7 @@
     "method-override": "^2.3.10",
     "moment": "^2.22.2",
     "mongodb": "^2.2.36",
-    "mongoose": "^4.13.17",
+    "mongoose": "^5.7.5",
     "morgan": "^1.9.1",
     "node-tokenizer": "0.0.0",
     "pug": "^2.0.3",
